@@ -52,4 +52,13 @@ class AdminService
             return $message;
         }
     }
+
+    public function checkPhone($phone) {
+        $message = "";
+        $checkPhone = preg_match('/^(0|\+84)[0-9]{9}$/', $phone);
+        if(!$checkPhone){
+            $message = "Số điện thoại không hợp lệ.";
+        }
+        return $message;
+    }
 }

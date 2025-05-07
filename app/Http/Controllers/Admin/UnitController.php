@@ -98,7 +98,7 @@ class UnitController extends Controller
             ]);
         }
 
-        if ($countLesson == "") {
+        if ($countLesson == "" || $countLesson == 0) {
             return response()->json([
                 'success' => false,
                 'message' => 'Bài học chưa được tạo.'
@@ -191,18 +191,16 @@ class UnitController extends Controller
 
     public function delete(Request $request){
         $unit = Unit::find($request->id);
-        $lessonRemoves = Lesson::Where('unit_id',$request->id)->get();
-        foreach ($lessonRemoves as $lessonRemove) {
-            $fileRemoves = Document::Where('lesson_id',$lessonRemove->id)->get();
-            foreach ($fileRemoves as $fileRemove) {
-                $fileName = $fileRemove->name;
-                $filePath = 'lesson_files/' . $fileName;
-                if (Storage::disk('public')->exists($filePath)) {
-                    Storage::disk('public')->delete($filePath);
-                }
-                $fileRemove->delete();
+        $fileRemoves = DB::table('documents')
+            ->join('lessons', 'documents.lesson_id', '=', 'lessons.id')
+            ->where('lessons.unit_id', $request->id)
+            ->select('documents.name')
+            ->get();
+        foreach ($fileRemoves as $fileRemove) {
+            $filePath = 'lesson_files/' . $fileRemove->name;
+            if (Storage::disk('public')->exists($filePath)) {
+                Storage::disk('public')->delete($filePath);
             }
-            $lessonRemove->delete();
         }
         $unit->delete();
         return response()->json([

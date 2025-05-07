@@ -1,10 +1,18 @@
 @php
     $currentUrl = $_SERVER['REQUEST_URI'];
     $list1 = ["course","unit"];
+    $list2 = ["user"];
     $isFound1 = false;
+    $isFound2 = false;
     foreach ($list1 as $item) {
         if (strpos($currentUrl, $item) !== false) {
             $isFound1 = true;
+            break;
+        }
+    }
+    foreach ($list2 as $item) {
+        if (strpos($currentUrl, $item) !== false) {
+            $isFound2 = true;
             break;
         }
     }
@@ -39,6 +47,25 @@
                             </a>
                         </li>
                     </ul>
+                </li>
+                <li class="nav-item @if ($isFound2 == true) menu-open @endif">
+                    <a href="#" class="nav-link @if ($isFound2 == true) active @endif">
+                        <i class="nav-icon fa-solid fa-user"></i>
+                        <p>Quản lý học viên <i class="nav-arrow fa-solid fa-chevron-right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{route('list_user')}}" class="nav-link @if (strpos($currentUrl, 'user') !== false) active @endif">
+                                <i class="nav-icon fa-solid fa-list-ul"></i> <p>Danh sách học viên</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="{{route('list_progress')}}" class="nav-link @if (strpos($currentUrl, 'progress') !== false) active @endif">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                        <p>Tiến độ học tập</p>
+                    </a>
                 </li>
             </ul>
         </nav>

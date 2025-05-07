@@ -37,7 +37,7 @@
                 <tbody>
                     @if (count($units) == 0)
                         <tr>
-                            <td valign="middle" align="center" colspan="5">Không có dữ liệu</td>
+                            <td valign="middle" align="center" colspan="6">Không có dữ liệu</td>
                         </tr>
                     @endif
                     @foreach ($units as $key => $unit)
@@ -89,7 +89,7 @@
         function change_stt(id,stt){
             var csrfToken = $('meta[name="csrf-token"]').attr('content');
             $.ajax({
-                url: '{{ route('change_stt') }}',
+                url: '{{ route('change_stt_unit') }}',
                 headers: {
                     'X-CSRF-TOKEN': csrfToken
                 },

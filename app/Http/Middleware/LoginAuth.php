@@ -16,7 +16,7 @@ class LoginAuth
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check()) {
+        if (Auth::check() && (Auth::user()->access_right == 1)) {
             return redirect()->route('admin');
         }
         

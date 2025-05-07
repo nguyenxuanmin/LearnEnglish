@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('slug')->nullable();
             $table->text('content')->nullable();
             $table->boolean('status')->default(1);
-            $table->bigInteger('unit_id');
+            $table->foreignId('unit_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

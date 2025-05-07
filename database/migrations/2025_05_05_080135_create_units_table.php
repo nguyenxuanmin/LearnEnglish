@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->text('description')->nullable();
             $table->boolean('status')->default(1);
-            $table->bigInteger('course_id');
+            $table->foreignId('course_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

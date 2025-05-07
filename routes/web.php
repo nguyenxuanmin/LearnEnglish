@@ -9,7 +9,9 @@ use App\Http\Controllers\SystemController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\CourseController;
-use App\Http\Controllers\Admin\unitController;
+use App\Http\Controllers\Admin\UnitController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\ProgressController;
 
 Route::group(['middleware' => [SystemAuth::class]], function () {
     Route::group(['middleware' => [AdminAuth::class]], function () {
@@ -20,14 +22,23 @@ Route::group(['middleware' => [SystemAuth::class]], function () {
         Route::post('/course/save', [CourseController::class, 'save'])->name('save_course');
         Route::post('/course/delete', [CourseController::class, 'delete'])->name('delete_course');
         Route::get('/course/edit/{id}', [CourseController::class, 'edit'])->name('edit_course');
-        Route::post('/course/change_stt', [CourseController::class, 'change_stt'])->name('change_stt');
-        Route::get('/unit', [unitController::class, 'index'])->name('list_unit');
-        Route::get('/unit/add', [unitController::class, 'add'])->name('add_unit');
-        Route::post('/unit/save', [unitController::class, 'save'])->name('save_unit');
-        Route::post('/unit/delete', [unitController::class, 'delete'])->name('delete_unit');
-        Route::get('/unit/edit/{id}', [unitController::class, 'edit'])->name('edit_unit');
-        Route::post('/unit/change_stt', [unitController::class, 'change_stt'])->name('change_stt');
-        
+        Route::post('/course/change_stt', [CourseController::class, 'change_stt'])->name('change_stt_course');
+        Route::get('/unit', [UnitController::class, 'index'])->name('list_unit');
+        Route::get('/unit/add', [UnitController::class, 'add'])->name('add_unit');
+        Route::post('/unit/save', [UnitController::class, 'save'])->name('save_unit');
+        Route::post('/unit/delete', [UnitController::class, 'delete'])->name('delete_unit');
+        Route::get('/unit/edit/{id}', [UnitController::class, 'edit'])->name('edit_unit');
+        Route::post('/unit/change_stt', [UnitController::class, 'change_stt'])->name('change_stt_unit');
+        Route::get('/user', [UserController::class, 'index'])->name('list_user');
+        Route::get('/user/add', [UserController::class, 'add'])->name('add_user');
+        Route::post('/user/save', [UserController::class, 'save'])->name('save_user');
+        Route::post('/user/delete', [UserController::class, 'delete'])->name('delete_user');
+        Route::get('/user/edit/{id}', [UserController::class, 'edit'])->name('edit_user');
+        Route::post('/user/change_stt', [UserController::class, 'change_stt'])->name('change_stt_user');
+        Route::post('/user/update_password', [UserController::class, 'update_password'])->name('update_password');
+        Route::get('/progress', [ProgressController::class, 'index'])->name('list_progress');
+        Route::get('/progress/update/{id}', [ProgressController::class, 'update'])->name('update_progress');
+        Route::post('/progress/save', [ProgressController::class, 'save'])->name('save_progress');
     });
     Route::group(['middleware' => [LoginAuth::class]], function () {
         Route::get('/admin/login', function () {return view('admin.login');})->name('login');
