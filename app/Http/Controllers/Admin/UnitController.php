@@ -191,8 +191,7 @@ class UnitController extends Controller
 
     public function delete(Request $request){
         $unit = Unit::find($request->id);
-        $fileRemoves = DB::table('documents')
-            ->join('lessons', 'documents.lesson_id', '=', 'lessons.id')
+        $fileRemoves = Document::join('lessons', 'documents.lesson_id', '=', 'lessons.id')
             ->where('lessons.unit_id', $request->id)
             ->select('documents.name')
             ->get();

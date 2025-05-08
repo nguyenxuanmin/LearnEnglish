@@ -1,14 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
 
-class AdminController extends Controller
+class ClientController extends Controller
 {
     public function login(Request $request){
         $email = $request->input('email');
@@ -20,7 +18,7 @@ class AdminController extends Controller
             ]);
         }
 
-        $credentials = ['email' => $email, 'password' => $password, 'access_right' => 1];
+        $credentials = ['email' => $email, 'password' => $password];
         if (auth()->attempt($credentials)) {
             return response()->json([
                 'success' => true,
@@ -36,6 +34,10 @@ class AdminController extends Controller
 
     public function logout(){
         Auth::logout();
-        return redirect()->route('login');
+        return redirect()->route('login_client');
+    }
+
+    public function index(){
+        return view('client.index');
     }
 }

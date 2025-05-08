@@ -5,6 +5,8 @@ use App\Http\Middleware\SystemAuth;
 use App\Http\Middleware\CheckSystemAuth;
 use App\Http\Middleware\AdminAuth;
 use App\Http\Middleware\LoginAuth;
+use App\Http\Middleware\ClientAuth;
+use App\Http\Middleware\LoginClientAuth;
 use App\Http\Controllers\SystemController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -12,6 +14,7 @@ use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\UnitController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ProgressController;
+use App\Http\Controllers\Client\ClientController;
 
 Route::group(['middleware' => [SystemAuth::class]], function () {
     Route::group(['middleware' => [AdminAuth::class]], function () {
@@ -39,14 +42,21 @@ Route::group(['middleware' => [SystemAuth::class]], function () {
         Route::get('/progress', [ProgressController::class, 'index'])->name('list_progress');
         Route::get('/progress/update/{id}', [ProgressController::class, 'update'])->name('update_progress');
         Route::post('/progress/save', [ProgressController::class, 'save'])->name('save_progress');
+        Route::post('/progress/complete', [ProgressController::class, 'complete'])->name('complete_progress');
     });
     Route::group(['middleware' => [LoginAuth::class]], function () {
         Route::get('/admin/login', function () {return view('admin.login');})->name('login');
         Route::post('/admin/login', [AdminController::class, 'login'])->name('login');
     });
 
-    Route::get('/', function () {
-        return view('welcome');
+    Route::group(['middleware' => [ClientAuth::class]], function () {
+        Route::get('/', [ClientController::class, 'index'])->name('index');
+        Route::get('/logout', [ClientController::class, 'logout'])->name('logout_client');
+    });
+
+    Route::group(['middleware' => [LoginClientAuth::class]], function () {
+        Route::get('/login', function () {return view('client.login');})->name('login_client');
+        Route::post('/login', [ClientController::class, 'login'])->name('login_client');
     });
 });
 

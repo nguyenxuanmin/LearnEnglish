@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('documents', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
-            $table->string('type')->nullable();
             $table->foreignId('lesson_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });

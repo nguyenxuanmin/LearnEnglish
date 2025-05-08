@@ -46,4 +46,9 @@ class User extends Authenticatable
             'date_start' => 'date',
         ];
     }
+
+    public function progress()
+    {
+        return $this->hasOne(Progress::class);
+    }
 }
