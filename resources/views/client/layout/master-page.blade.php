@@ -20,6 +20,7 @@
         <link rel="stylesheet" href="{{asset('css/index.css')}}"/>
     </head>
     <body>
+        @include('client.layout.header')
         <main>
             @yield('content')
             @include('client.layout.footer')

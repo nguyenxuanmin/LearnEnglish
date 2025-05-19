@@ -33,7 +33,7 @@
                 <tbody>
                     @if (count($users) == 0)
                         <tr>
-                            <td valign="middle" align="center" colspan="6">Không có dữ liệu</td>
+                            <td valign="middle" align="center" colspan="5">Không có dữ liệu</td>
                         </tr>
                     @endif
                     @foreach ($users as $key => $user)

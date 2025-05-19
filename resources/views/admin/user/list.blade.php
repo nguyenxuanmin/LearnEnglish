@@ -23,6 +23,21 @@
             <div class="mb-3">
                 <a class="btn btn-outline-primary" href="{{route('add_user')}}" title="Thêm">Thêm học viên</a>
             </div>
+            <div class="row">
+                <div class="col-12 col-md-4 mb-3">
+                    <form action="{{route('search_user')}}">
+                        <div class="input-group">
+                            <input type="search" name="search" class="form-control form-control" placeholder="Tìm kiếm" value="@if (isset($infoSearch)){{$infoSearch}}@endif">
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-outline-dark">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-12 col-md-8"></div>
+            </div>
             <table class="table">
                 <thead class="table-dark">
                     <tr>

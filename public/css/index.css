@@ -4,7 +4,7 @@ html {
 body{
     position: relative;
     font-family: 'Mulish';
-    font-size: 16px;
+    font-size: 14px;
 }
 ul{
     list-style: none;
@@ -18,7 +18,7 @@ a{
     position: fixed;
     bottom: 20px;
     right: 20px;
-    background-color: #19b7f9;
+    background-color: #90a94c;
     color: #fff;
     border-radius: 10px;
     width: 40px;
@@ -28,6 +28,197 @@ a{
     display: none;
     cursor: pointer;
     text-align: center;
+}
+.title-index{
+    position: relative;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+.top-header{
+    position: relative;
+    background-color: #222;
+    padding: 10px 0;
+    font-size: 12px;
+    color: #fff;
+}
+.top-header-content{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.top-header-content a:hover,
+.top-header-content i{
+    color: #90a94c;
+}
+.top-header-content a{
+    color: #fff;
+    margin-left: 20px;
+}
+.item-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 20px 0;
+}
+.item-nav{
+    display: flex;
+    align-items: center;
+    width: 70%;
+}
+.item-nav li:first-child{
+    padding-left: 0;
+}
+.item-nav li{
+    padding-left: 30px;
+}
+.item-nav li a{
+    position: relative;
+    text-transform: uppercase;
+    font-size: 16px;
+    font-weight: 700;
+    color: #777;
+    transition: ease-in-out 0.2s all;
+}
+.item-nav li a:hover{
+    color: #90a94c;
+}
+.item-user-header{
+    position: relative;
+}
+#item-show-user{
+    font-size: 16px;
+    color: #777;
+}
+#item-show-user:hover{
+    color: #90a94c;
+}
+.item-user-header-content{
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    width: 200px;
+    z-index: 5;
+    text-align: left;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    background: #fff;
+}
+.item-user-header-content a:first-child{
+    border-top: 0;
+}
+.item-user-header-content a{
+    display: block;
+    padding: 5px 15px;
+    color: #333;
+    border-top: 1px solid #333;
+}
+.item-user-header-content a:hover{
+    color: #90a94c;
+}
+.my-slider{
+    position: relative;
+}
+.item-slider{
+    width: 100%;
+    max-height: 800px;
+}
+.my-slider .slick-arrow{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+    line-height: 50px;
+    text-align: center;
+    color: #fff;
+    background-color: #90a94c;
+    z-index: 2;
+    cursor: pointer;
+}
+.my-slider .slick-prev{
+    left: 15px;
+}
+.my-slider .slick-next{
+    right: 15px;
+}
+.section-course,
+.section-about-us{
+    position: relative;
+    padding: 60px 0;
+}
+.my-course{
+    position: relative;
+    margin: 0 -15px;
+}
+.item-course{
+    padding: 0 15px;
+}
+.item-course img{
+    transition: transform 0.3s ease-in-out;
+}
+.item-course:hover img{
+    transform: scale(1.2);
+    transition: transform 0.3s ease-in-out;
+}
+.my-course .slick-arrow{
+    position: absolute;
+    top: 30%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    line-height: 40px;
+    text-align: center;
+    color: #fff;
+    background-color: #90a94c;
+    z-index: 2;
+    cursor: pointer;
+}
+.my-course .slick-prev{
+    left: 15px;
+}
+.my-course .slick-next{
+    right: 15px;
+}
+.item-course-image{
+    position: relative;
+    width: 100%;
+    height: 250px;
+    overflow: hidden;
+}
+.item-course-content{
+    position: relative;
+    padding: 30px 20px 15px;
+    background-color: #f8f9f8;
+}
+.item-course-title{
+    color: #333;
+    font-weight: 700;
+    font-size: 18px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+.item-course-title a{
+    color: #333;
+}
+.item-course-title a:hover{
+    color: #90a94c;
+}
+.item-course-desc{
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 15px;
+}
+.item-course-fee{
+    border-top: 1px solid #cecece;
+    padding-top: 15px;
 }
 .footer{
     background: #1c2f3c;

@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class ClientController extends Controller
+class ClientAuthController extends Controller
 {
     public function login(Request $request){
         $email = $request->input('email');
@@ -35,9 +35,5 @@ class ClientController extends Controller
     public function logout(){
         Auth::logout();
         return redirect()->route('login_client');
-    }
-
-    public function index(){
-        return view('client.index');
     }
 }

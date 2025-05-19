@@ -184,4 +184,13 @@ class UserController extends Controller
             'success' => true
         ]);
     }
+
+    public function search(Request $request){
+        $infoSearch = $request->search;
+        $users = User::where('name','LIKE','%'.$infoSearch.'%')->orWhere('email','LIKE','%'.$infoSearch.'%')->orderBy('name','asc')->paginate(20);
+        return view('admin.user.list',[
+            'infoSearch' => $infoSearch,
+            'users' => $users
+        ]);
+    }
 }

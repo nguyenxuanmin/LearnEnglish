@@ -12,7 +12,7 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-end">
                         <li class="breadcrumb-item"><a href="{{route('admin')}}">Dashboard</a></li>
-                        <li class="breadcrumb-item"><a href="{{route('list_course')}}">Danh sách khóa học</a></li>
+                        <li class="breadcrumb-item"><a href="{{route('list_slider')}}">Danh sách sliders</a></li>
                         <li class="breadcrumb-item active" aria-current="page">{{$titlePage}}</li>
                     </ol>
                 </div>
@@ -27,53 +27,32 @@
                         <div class="row">
                             <div class="col-12 col-md-6">
                                 <div class="mb-3">
-                                    <label for="name" class="form-label">Tên khóa học</label>
-                                    <input type="text" class="form-control" name="name" value="@if (isset($course)){{$course->name}}@endif">
+                                    <label for="name" class="form-label">Tên slider</label>
+                                    <input type="text" class="form-control" name="name" value="@if (isset($slider)){{$slider->name}}@endif">
                                 </div>
-                                <div class="mb-3">
-                                    <label for="description" class="form-label">Mô tả khóa học</label>
-                                    <textarea class="form-control" name="description" rows="4">@if (isset($course)){{$course->description}}@endif</textarea>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="fee" class="form-label">Học phí</label>
-                                    <input type="text" class="form-control" name="fee" value="@if (isset($course)){{$course->fee}}@endif">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="status" class="form-label">Ẩn/Hiện</label>
-                                    <input type="checkbox" class="form-check-input" name="status" @if (!isset($course) || (isset($course) && $course->status == 1)) checked @endif>
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Hình ảnh</label>
                                     <input type="file" class="form-control mb-3" name="image" id="image" accept="image/*">
                                     <div class="imageContent">
-                                        <img id="imageContent" src="@if (isset($course) && $course->image != ""){{asset('storage/courses/' . basename($course->image))}}@else{{asset('library/admin/default-image.png')}}@endif" alt="Image preview" style="max-width: 100%; max-height: 250px;">
+                                        <img id="imageContent" src="@if (isset($slider) && $slider->image != ""){{asset('storage/sliders/' . basename($slider->image))}}@else{{asset('library/admin/default-image.png')}}@endif" alt="Image preview" style="max-width: 100%; max-height: 250px;">
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 mb-3">
-                                <label for="content" class="form-label">Nội dung</label>
-                                <textarea name="content" id="content">@if (isset($course)){{$course->content}}@endif</textarea>
-                            </div>
+                            <div class="col-12 col-md-6"></div>
                             <div class="col-12 mb-3 text-end">
                                 <button class="btn btn-primary">{{$titlePage}}</button>
-                                <a href="{{route('list_course')}}" class="btn btn-dark">Trở lại</a>
+                                <a href="{{route('list_slider')}}" class="btn btn-dark">Trở lại</a>
                             </div>
                         </div>
                     </div>
                     <input type="hidden" name="action" value="{{$action}}">
-                    <input type="hidden" name="id" value="@if (isset($course)){{$course->id}}@endif">
+                    <input type="hidden" name="id" value="@if (isset($slider)){{$slider->id}}@endif">
                 </form>
             </div>
         </div>
     </div>
     <script>
         $(document).ready(function() {
-            $('#content').summernote({
-                height: 300
-            });
-
             document.getElementById('image').addEventListener('change', function(event) {
                 const file = event.target.files[0];
                 if (file) {
@@ -87,13 +66,13 @@
                     reader.readAsDataURL(file);
                 }
             });
-            
+
             $('#submitForm').on('submit', function(e){
                 e.preventDefault();
                 var formData = new FormData(this);
                 var csrfToken = $('meta[name="csrf-token"]').attr('content');
                 $.ajax({
-                    url: '{{ route('save_course') }}',
+                    url: '{{ route('save_slider') }}',
                     headers: {
                         'X-CSRF-TOKEN': csrfToken
                     },
@@ -103,7 +82,7 @@
                     processData: false, 
                     success: function(response) {
                         if (response.success == true) {
-                            location.href = '{{route('list_course')}}';
+                            location.href = '{{route('list_slider')}}';
                         }else{
                             alert(response.message);
                         }

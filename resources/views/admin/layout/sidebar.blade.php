@@ -1,18 +1,10 @@
 @php
     $currentUrl = $_SERVER['REQUEST_URI'];
     $list1 = ["course","unit"];
-    $list2 = ["user"];
     $isFound1 = false;
-    $isFound2 = false;
     foreach ($list1 as $item) {
         if (strpos($currentUrl, $item) !== false) {
             $isFound1 = true;
-            break;
-        }
-    }
-    foreach ($list2 as $item) {
-        if (strpos($currentUrl, $item) !== false) {
-            $isFound2 = true;
             break;
         }
     }
@@ -48,23 +40,39 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item @if ($isFound2 == true) menu-open @endif">
-                    <a href="#" class="nav-link @if ($isFound2 == true) active @endif">
-                        <i class="nav-icon fa-solid fa-user"></i>
-                        <p>Quản lý học viên <i class="nav-arrow fa-solid fa-chevron-right"></i></p>
+                <li class="nav-item">
+                    <a href="{{route('list_user')}}" class="nav-link @if (strpos($currentUrl, 'user') !== false) active @endif">
+                        <i class="nav-icon fa-solid fa-user"></i> <p>Danh sách học viên</p>
                     </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{{route('list_user')}}" class="nav-link @if (strpos($currentUrl, 'user') !== false) active @endif">
-                                <i class="nav-icon fa-solid fa-list-ul"></i> <p>Danh sách học viên</p>
-                            </a>
-                        </li>
-                    </ul>
                 </li>
                 <li class="nav-item">
                     <a href="{{route('list_progress')}}" class="nav-link @if (strpos($currentUrl, 'progress') !== false) active @endif">
-                        <i class="fa-solid fa-graduation-cap"></i>
-                        <p>Tiến độ học tập</p>
+                        <i class="fa-solid fa-graduation-cap"></i> <p>Tiến độ học tập</p>
+                    </a>
+                </li>
+                 <li class="nav-item">
+                    <a href="{{route('about')}}" class="nav-link @if (strpos($currentUrl, 'about') !== false) active @endif">
+                        <i class="fa-solid fa-circle-info"></i> <p>Giới thiệu</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{route('list_slider')}}" class="nav-link @if (strpos($currentUrl, 'slider') !== false) active @endif">
+                        <i class="fa-solid fa-image"></i> <p>Slider</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{route('list_blog')}}" class="nav-link @if (strpos($currentUrl, 'blog') !== false) active @endif">
+                        <i class="fa-solid fa-blog"></i> <p>Blog</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{route('list_feedback')}}" class="nav-link @if (strpos($currentUrl, 'feedback') !== false) active @endif">
+                        <i class="fa-solid fa-message"></i> <p>Feedback</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{route('company')}}" class="nav-link @if (strpos($currentUrl, 'company') !== false) active @endif">
+                        <i class="fa-solid fa-house"></i> <p>Thông tin công ty</p>
                     </a>
                 </li>
             </ul>

@@ -219,4 +219,13 @@ class UnitController extends Controller
             'success' => true
         ]);
     }
+
+    public function search(Request $request){
+        $infoSearch = $request->search;
+        $units = Unit::where('name','LIKE','%'.$infoSearch.'%')->orderBy('name','asc')->paginate(20);
+        return view('admin.unit.list',[
+            'infoSearch' => $infoSearch,
+            'units' => $units
+        ]);
+    }
 }

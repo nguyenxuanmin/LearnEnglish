@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use App\Models\Course;
+use App\Models\Blog;
 use App\Services\AdminService;
 
-class CourseController extends Controller
+class BlogController extends Controller
 {
     public function __construct()
     {
@@ -16,29 +16,29 @@ class CourseController extends Controller
     }
 
     public function index(){
-        $courses = Course::OrderBy('name','asc')->paginate(20);
-        return view('admin.course.list',[
-            'courses' => $courses
+        $blogs = Blog::OrderBy('created_at','desc')->paginate(20);
+        return view('admin.blog.list',[
+            'blogs' => $blogs
         ]);
     }
 
     public function add(){
-        $titlePage = "Thêm khóa học";
+        $titlePage = "Thêm blog";
         $action = "add";
-        return view('admin.course.main',[
+        return view('admin.blog.main',[
             'titlePage' => $titlePage,
             'action' => $action
         ]);
     }
 
     public function edit($id){
-        $titlePage = "Sửa khóa học";
+        $titlePage = "Sửa blog";
         $action = "edit";
-        $course = Course::find($id);
-        return view('admin.course.main',[
+        $blog = Blog::find($id);
+        return view('admin.blog.main',[
             'titlePage' => $titlePage,
             'action' => $action,
-            'course' => $course
+            'blog' => $blog
         ]);
     }
 
@@ -46,41 +46,40 @@ class CourseController extends Controller
         $name = $request->name;
         $slug = $this->adminService->generateSlug($name);
         $description = $request->description;
-        $fee = $request->fee;
+        $content = $request->content;
         if(isset($request->status)){
             $status = 1;
         }else{
             $status = 0;
         }
-        $content = $request->content;
+        $action = $request->action;
         if (isset($_FILES["image"])) {
             $image = $_FILES["image"]["name"];
         }else{
             $image = "";
         }
-        $action = $request->action;
 
-        if ($name == "") {
+        if (empty($name)) {
             return response()->json([
                 'success' => false,
-                'message' => 'Tên khóa học không được để trống.'
+                'message' => 'Tên blog không được để trống.'
             ]);
         }
 
         if($action == "edit"){
-            $course = Course::find($request->id);
+            $blog = Blog::find($request->id);
         }else{
-            $course = new Course();
+            $blog = new Blog();
         }
 
         if ($image != "") {
             if($action == "edit"){
-                $imagePath = 'courses/'.$course->image;
+                $imagePath = 'blogs/'.$blog->image;
                 if (Storage::disk('public')->exists($imagePath)) {
                     Storage::disk('public')->delete($imagePath);
                 }
             }
-            $messageError = $this->adminService->generateImage($_FILES["image"],'courses');
+            $messageError = $this->adminService->generateImage($_FILES["image"],'blogs');
             if($messageError != ""){
                 return response()->json([
                     'success' => false,
@@ -91,18 +90,17 @@ class CourseController extends Controller
 
         if($action == "edit"){
             if (!$request->hasFile('image')) {
-                $image = $course->image;
+                $image = $blog->image;
             }
         }
         
-        $course->name = $name;
-        $course->slug = $slug;
-        $course->description = $description;
-        $course->fee = $fee;
-        $course->status = $status;
-        $course->content = $content;
-        $course->image = $image;
-        $course->save();
+        $blog->name = $name;
+        $blog->slug = $slug;
+        $blog->description = $description;
+        $blog->content = $content;
+        $blog->image = $image;
+        $blog->status = $status;
+        $blog->save();
 
         return response()->json([
             'success' => true,
@@ -111,21 +109,25 @@ class CourseController extends Controller
     }
 
     public function delete(Request $request){
-        $course = Course::find($request->id);
-        $course->delete();
+        $blog = Blog::find($request->id);
+        $imagePath = 'blogs/'.$blog->image;
+        if (Storage::disk('public')->exists($imagePath)) {
+            Storage::disk('public')->delete($imagePath);
+        }
+        $blog->delete();
         return response()->json([
             'success' => true
         ]);
     }
-
+    
     public function change_stt(Request $request){
-        $course = Course::find($request->id);
+        $blog = Blog::find($request->id);
         if ($request->stt == 'show') {
-            $course->status = 1;
+            $blog->status = 1;
         }else{
-            $course->status = 0;
+            $blog->status = 0;
         }
-        $course->save();
+        $blog->save();
         return response()->json([
             'success' => true
         ]);
@@ -133,10 +135,10 @@ class CourseController extends Controller
 
     public function search(Request $request){
         $infoSearch = $request->search;
-        $courses = Course::where('name','LIKE','%'.$infoSearch.'%')->orderBy('name','asc')->paginate(20);
-        return view('admin.course.list',[
+        $blogs = Blog::where('name','LIKE','%'.$infoSearch.'%')->orderBy('created_at','desc')->paginate(20);
+        return view('admin.slider.list',[
             'infoSearch' => $infoSearch,
-            'courses' => $courses
+            'blogs' => $blogs
         ]);
     }
 }

@@ -23,6 +23,21 @@
             <div class="mb-3">
                 <a class="btn btn-outline-primary" href="{{route('add_course')}}" title="Thêm">Thêm khóa học</a>
             </div>
+            <div class="row">
+                <div class="col-12 col-md-4 mb-3">
+                    <form action="{{route('search_course')}}">
+                        <div class="input-group">
+                            <input type="search" name="search" class="form-control form-control" placeholder="Tìm kiếm" value="@if (isset($infoSearch)){{$infoSearch}}@endif">
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-outline-dark">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-12 col-md-8"></div>
+            </div>
             <table class="table">
                 <thead class="table-dark">
                     <tr>
@@ -31,7 +46,7 @@
                         <th scope="col" width="300px">Học phí</th>
                         <th scope="col" width="250px" class="text-center">Trạng thái</th>
                         <th scope="col" width="250px" class="text-center">Ngày tạo</th>
-                        <th scope="col" width="150px">Hành động</th>
+                        <th scope="col" width="150px" class="text-center">Hành động</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -53,7 +68,7 @@
                                 @endif
                             </td>
                             <td valign="middle" align="center">{{$course->created_at->format('d/m/Y');}}</td>
-                            <td valign="middle">
+                            <td valign="middle" align="center">
                                 <a href="{{route('edit_course',[$course->id])}}" class="btn btn-outline-info" title="Sửa"><i class="fa-solid fa-pen-to-square"></i></a>
                                 <button class="btn btn-outline-danger" title="Xóa" onclick="delete_course({{$course->id}});"><i class="fa-solid fa-trash"></i></button>
                             </td>
