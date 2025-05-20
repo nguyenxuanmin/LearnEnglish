@@ -1,4 +1,7 @@
-<header class="header">
+@php
+    $currentUrl = $_SERVER['REQUEST_URI'];
+@endphp
+<header>
     <div class="top-header">
         <div class="container">
             <div class="top-header-content">
@@ -12,61 +15,56 @@
             </div>
         </div>
     </div>
-    <div class="container">
-        <div class="item-header">
-            <div class="item-logo">
-                <a href="{{route('index')}}">
-                    @if (count($company) && $company[0]->logo != "")
-                        <img src="{{asset('storage/company/logo/'.$company[0]->logo)}}" alt="{{$company[0]->name}}" class="object-fix">
-                    @else
-                        LOGO
-                    @endif
-                </a>
-            </div>
-            <ul class="item-nav">
-                <li>
-                    <a href="">Giới thiệu</a>
-                </li>
-                <li>
-                    <a href="">Khóa học</a>
-                </li>
-                <li>
-                    <a href="">Chia sẻ kiến thức</a>
-                </li>
-                <li>
-                    <a href="">Thư viện</a>
-                </li>
-                <li>
-                    <a href="">Liên hệ</a>
-                </li>
-            </ul>
-            <div class="item-user-header">
-                <a id="item-show-user" href="javascript:void(0)"><i class="fa-solid fa-user"></i></a>
-                <div class="item-user-header-content">
-                    @if (Auth::check())
-                        <a href="">Thông tin tài khoản</a>
-                        <a href="">Khóa học đang học</a>
-                        <a href="">Đăng xuất</a>
-                    @else
-                        <a href="">Đăng nhập</a>
-                    @endif
+    <div id="header">
+        <div class="container">
+            <div class="item-header">
+                <div class="item-logo">
+                    <a href="{{route('index')}}">
+                        @if (count($company) && $company[0]->logo != "")
+                            <img src="{{asset('storage/company/logo/'.$company[0]->logo)}}" alt="{{$company[0]->name}}" class="object-fix">
+                        @else
+                            LOGO
+                        @endif
+                    </a>
+                </div>
+                <ul class="item-nav">
+                    <li>
+                        <a href="{{route('client_about')}}" @if (strpos($currentUrl, 'gioi-thieu') !== false) class="active" @endif>Giới thiệu</a>
+                    </li>
+                    <li>
+                        <a href="{{route('course')}}" @if (strpos($currentUrl, 'khoa-hoc') !== false) class="active" @endif>Khóa học</a>
+                    </li>
+                    <li>
+                        <a href="{{route('blog')}}" @if (strpos($currentUrl, 'chia-se-kien-thuc') !== false) class="active" @endif>Chia sẻ kiến thức</a>
+                    </li>
+                    <li>
+                        <a href="{{route('gallery')}}" @if (strpos($currentUrl, 'thu-vien-anh') !== false) class="active" @endif>Thư viện ảnh</a>
+                    </li>
+                    <li>
+                        <a href="#contact">Liên hệ</a>
+                    </li>
+                </ul>
+                <div class="item-menu-user">
+                    <a id="itemMenuMobile" href="javascript:void(0)"><i class="fa fa-bars" aria-hidden="true"></i></a>
+                    <div class="item-user-header">
+                        <a id="itemDisplayUser" href="javascript:void(0)"><i class="fa-solid fa-user"></i></a>
+                        <div class="item-user-header-content">
+                            @if (Auth::check())
+                                <a href="">Thông tin tài khoản</a>
+                                <a href="">Khóa học đang học</a>
+                                <a href="{{route('logout_client')}}">Đăng xuất</a>
+                            @else
+                                <a href="{{route('login_client')}}">Đăng nhập</a>
+                            @endif
+                        </div>
+                    </div>
                 </div>
             </div>
-            @php
-                /*
-            @endphp
-                        <a class="item-show-menu" href="javascript:void(0)"><i class="fa fa-bars" aria-hidden="true"></i></a>
-            @php
-                */
-            @endphp
         </div>
     </div>
 </header>
-@php
-    /*
-@endphp
-<div id="menu-mobile">
-    <a class="item-hide-menu" href="javascript:void(0)"><i class="fa-solid fa-xmark"></i></a>
+<div id="menuMobile">
+    <a id="itemHideMenu" href="javascript:void(0)"><i class="fa-solid fa-xmark"></i></a>
     <div class="item-logo-mobile">
         <a href="{{route('index')}}">
             @if (count($company) && $company[0]->logo != "")
@@ -77,26 +75,20 @@
         </a>
     </div>
     <ul>
-        <li>
-            <a href="{{route('index')}}#about-us">Về chúng tôi</a>
+       <li>
+            <a href="{{route('client_about')}}"  @if (strpos($currentUrl, 'gioi-thieu') !== false) class="active" @endif>Giới thiệu</a>
         </li>
         <li>
-            <a href="{{route('index')}}#service">Dịch vụ</a>
+            <a href="{{route('course')}}" @if (strpos($currentUrl, 'khoa-hoc') !== false) class="active" @endif>Khóa học</a>
         </li>
         <li>
-            <a href="{{route('index')}}#transport">Vận chuyển</a>
+            <a href="{{route('blog')}}" @if (strpos($currentUrl, 'chia-se-kien-thuc') !== false) class="active" @endif>Chia sẻ kiến thức</a>
         </li>
         <li>
-            <a href="{{route('index')}}#statistical">Thống kê</a>
+            <a href="{{route('gallery')}}" @if (strpos($currentUrl, 'thu-vien-anh') !== false) class="active" @endif>Thư viện ảnh</a>
         </li>
         <li>
-            <a href="{{route('news')}}">Tin Tức</a>
-        </li>
-        <li>
-            <a href="{{route('index')}}#contact">Liên hệ</a>
+            <a href="#contact">Liên hệ</a>
         </li>
     </ul>
 </div>
-@php
-    */
-@endphp

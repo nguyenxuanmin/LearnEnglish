@@ -19,7 +19,7 @@ class FeedbackController extends Controller
     public function add(){
         $titlePage = "Thêm feedback";
         $action = "add";
-        $users = User::Where('access_right',0)->OrderBy('name','asc')->get();
+        $users = User::where('access_right',0)->where('status',1)->OrderBy('name','asc')->get();
         return view('admin.feedback.main',[
             'titlePage' => $titlePage,
             'action' => $action,
@@ -31,7 +31,7 @@ class FeedbackController extends Controller
         $titlePage = "Sửa feedback";
         $action = "edit";
         $feedback = Feedback::find($id);
-        $users = User::Where('access_right',0)->OrderBy('name','asc')->get();
+        $users = User::where('access_right',0)->where('status',1)->OrderBy('name','asc')->get();
         return view('admin.feedback.main',[
             'titlePage' => $titlePage,
             'action' => $action,

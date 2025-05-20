@@ -18,9 +18,15 @@ use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\AboutController;
 use App\Http\Controllers\Admin\FeedbackController;
+use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\ClientAuthController;
+use App\Http\Controllers\Client\ClientContactController;
+use App\Http\Controllers\Client\ClientAboutController;
+use App\Http\Controllers\Client\ClientCourseController;
+use App\Http\Controllers\Client\ClientBlogController;
+use App\Http\Controllers\Client\ClientGalleryController;
 
 Route::group(['middleware' => [SystemAuth::class]], function () {
     Route::group(['middleware' => [AdminAuth::class]], function () {
@@ -81,6 +87,13 @@ Route::group(['middleware' => [SystemAuth::class]], function () {
         Route::post('/feedback/delete', [FeedbackController::class, 'delete'])->name('delete_feedback');
         Route::get('/feedback/edit/{id}', [FeedbackController::class, 'edit'])->name('edit_feedback');
         Route::get('/feedback/search', [FeedbackController::class, 'search'])->name('search_feedback');
+        // Thư viện ảnh
+        Route::get('/gallery', [GalleryController::class, 'index'])->name('list_gallery');
+        Route::get('/gallery/add', [GalleryController::class, 'add'])->name('add_gallery');
+        Route::post('/gallery/save', [GalleryController::class, 'save'])->name('save_gallery');
+        Route::post('/gallery/delete', [GalleryController::class, 'delete'])->name('delete_gallery');
+        Route::get('/gallery/edit/{id}', [GalleryController::class, 'edit'])->name('edit_gallery');
+        Route::get('/gallery/search', [GalleryController::class, 'search'])->name('search_gallery');
         // Công ty
         Route::get('/company', [CompanyController::class, 'show'])->name('company');
         Route::post('/company/save', [CompanyController::class, 'save'])->name('save_company');
@@ -91,6 +104,14 @@ Route::group(['middleware' => [SystemAuth::class]], function () {
     });
 
     Route::get('/', [HomeController::class, 'index'])->name('index');
+    Route::post('/', [ClientContactController::class, 'contact'])->name('contact');
+    Route::get('/gioi-thieu', [ClientAboutController::class, 'show'])->name('client_about');
+    Route::get('/khoa-hoc', [ClientCourseController::class, 'show'])->name('course');
+    Route::get('/khoa-hoc/{slug}', [ClientCourseController::class, 'detail'])->name('course_detail');
+    Route::get('/chia-se-kien-thuc', [ClientBlogController::class, 'show'])->name('blog');
+    Route::get('/chia-se-kien-thuc/{slug}', [ClientBlogController::class, 'detail'])->name('blog_detail');
+    Route::get('/thu-vien-anh', [ClientGalleryController::class, 'show'])->name('gallery');
+
     Route::group(['middleware' => [ClientAuth::class]], function () {
         Route::get('/logout', [ClientAuthController::class, 'logout'])->name('logout_client');
     });

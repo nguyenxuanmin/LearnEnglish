@@ -52,7 +52,7 @@
                                     <label for="avatar" class="form-label">Avatar</label>
                                     <input type="file" class="form-control mb-3" name="avatar" id="avatar" accept="image/*">
                                     <div class="avatarContent">
-                                        <img id="avatarContent" src="@if (isset($user) && $user->avatar != ""){{asset('storage/user/' . basename($user->avatar))}}@else{{asset('library/admin/default-image.png')}}@endif" alt="Avatar preview" style="max-width: 100%; max-height: 150px;">
+                                        <img id="avatarContent" src="@if (isset($user) && $user->avatar != ""){{asset('storage/users/' . basename($user->avatar))}}@else{{asset('library/admin/default-image.png')}}@endif" alt="Avatar preview" style="max-width: 100%; max-height: 150px;">
                                     </div>
                                 </div>
                             </div>

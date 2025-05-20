@@ -115,12 +115,12 @@ class UserController extends Controller
 
         if ($avatar != "") {
             if($action == "edit"){
-                $imagePath = 'user/'.$user->avatar;
+                $imagePath = 'users/'.$user->avatar;
                 if (Storage::disk('public')->exists($imagePath)) {
                     Storage::disk('public')->delete($imagePath);
                 }
             }
-            $messageError = $this->adminService->generateImage($_FILES["avatar"],'user');
+            $messageError = $this->adminService->generateImage($_FILES["avatar"],'users');
             if($messageError != ""){
                 return response()->json([
                     'success' => false,
@@ -153,7 +153,7 @@ class UserController extends Controller
 
     public function delete(Request $request){
         $user = User::find($request->id);
-        $imagePath = 'user/'.$user->avatar;
+        $imagePath = 'users/'.$user->avatar;
         if (Storage::disk('public')->exists($imagePath)) {
             Storage::disk('public')->delete($imagePath);
         }

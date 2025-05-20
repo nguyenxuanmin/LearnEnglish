@@ -71,6 +71,11 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="{{route('list_gallery')}}" class="nav-link @if (strpos($currentUrl, 'gallery') !== false) active @endif">
+                        <i class="fa-solid fa-images"></i> <p>Thư viện ảnh</p>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="{{route('company')}}" class="nav-link @if (strpos($currentUrl, 'company') !== false) active @endif">
                         <i class="fa-solid fa-house"></i> <p>Thông tin công ty</p>
                     </a>

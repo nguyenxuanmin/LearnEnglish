@@ -46,7 +46,7 @@ class CourseController extends Controller
         $name = $request->name;
         $slug = $this->adminService->generateSlug($name);
         $description = $request->description;
-        $fee = $request->fee;
+        $fee = (int) str_replace('.', '', $request->input('fee', '0'));
         if(isset($request->status)){
             $status = 1;
         }else{

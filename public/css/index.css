@@ -14,7 +14,13 @@ ul{
 a{
     text-decoration: none;
 }
-#scroll-to-top{
+.mx-15{
+    margin: 0 -15px;
+}
+.px15{
+    padding: 0 15px;
+}
+#scrollToTop{
     position: fixed;
     bottom: 20px;
     right: 20px;
@@ -34,8 +40,17 @@ a{
     font-weight: 700;
     text-transform: uppercase;
     font-size: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
     text-align: center;
+}
+#header.header-fixed{
+    position: fixed;
+    width: 100%;
+    background-color: #fff;
+    transition: ease-in-out 0.2s all;
+    z-index: 3;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    top: 0;
 }
 .top-header{
     position: relative;
@@ -78,22 +93,28 @@ a{
 .item-nav li a{
     position: relative;
     text-transform: uppercase;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 700;
     color: #777;
     transition: ease-in-out 0.2s all;
 }
+.item-nav li a.active,
 .item-nav li a:hover{
     color: #90a94c;
+}
+.item-menu-user{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
 }
 .item-user-header{
     position: relative;
 }
-#item-show-user{
+#itemDisplayUser{
     font-size: 16px;
     color: #777;
 }
-#item-show-user:hover{
+#itemDisplayUser:hover{
     color: #90a94c;
 }
 .item-user-header-content{
@@ -119,16 +140,67 @@ a{
 .item-user-header-content a:hover{
     color: #90a94c;
 }
+#itemMenuMobile{
+    display: none;
+    color: #777;
+    font-size: 16px;
+}
+#menuMobile {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background: #fff;
+    z-index: 9999;
+    text-align: center;
+    padding-top: 50px;
+    transition: ease-in-out 0.4s;
+    opacity: 0;
+    overflow: hidden;
+}
+#menuMobile.show-menu {
+    width: 100%;
+    opacity: 1;
+}
+#itemHideMenu{
+    position: absolute;
+    font-size: 30px;
+    color: #f00808;
+    top: 15px;
+    right: 15px;
+}
+#menuMobile ul{
+    list-style: none;
+    padding-left: 0;
+}
+#menuMobile ul li{
+    margin-bottom: 15px;
+}
+#menuMobile ul li a{
+    font-size: 18px;
+    font-weight: 700;
+    color: #333;
+    text-transform: uppercase;
+}
+#menuMobile ul li a.active{
+    color: #90a94c;
+}
+.item-logo-mobile{
+    width: 70%;
+    margin: auto;
+    padding-bottom: 30px;
+}
 .my-slider{
     position: relative;
 }
 .item-slider{
     width: 100%;
-    max-height: 800px;
+    height: 800px;
 }
-.my-slider .slick-arrow{
+.slick-arrow{
     position: absolute;
-    top: 50%;
+    top: 40%;
     transform: translateY(-50%);
     width: 50px;
     height: 50px;
@@ -140,51 +212,38 @@ a{
     z-index: 2;
     cursor: pointer;
 }
-.my-slider .slick-prev{
+.slick-prev{
     left: 15px;
 }
-.my-slider .slick-next{
+.slick-next{
     right: 15px;
 }
+.my-slider .slick-arrow{
+    top: 50%;
+}
+.section-contact,
+.section-blog,
+.section-feedback,
 .section-course,
 .section-about-us{
     position: relative;
     padding: 60px 0;
 }
+.my-blog,
+.my-feedback,
 .my-course{
     position: relative;
-    margin: 0 -15px;
 }
-.item-course{
-    padding: 0 15px;
-}
+.item-blog img,
 .item-course img{
     transition: transform 0.3s ease-in-out;
 }
+.item-blog:hover img,
 .item-course:hover img{
     transform: scale(1.2);
     transition: transform 0.3s ease-in-out;
 }
-.my-course .slick-arrow{
-    position: absolute;
-    top: 30%;
-    transform: translateY(-50%);
-    width: 40px;
-    height: 40px;
-    font-size: 20px;
-    line-height: 40px;
-    text-align: center;
-    color: #fff;
-    background-color: #90a94c;
-    z-index: 2;
-    cursor: pointer;
-}
-.my-course .slick-prev{
-    left: 15px;
-}
-.my-course .slick-next{
-    right: 15px;
-}
+.item-blog-image,
 .item-course-image{
     position: relative;
     width: 100%;
@@ -220,15 +279,262 @@ a{
     border-top: 1px solid #cecece;
     padding-top: 15px;
 }
+.section-feedback{
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.section-feedback .title-index{
+    color: #fff;
+}
+.item-feedback-content{
+    position: relative;
+    background: #fff;
+    padding: 30px;
+    text-align: center;
+    width: 100%;
+}
+.item-feedback-image{
+    width: 80px;
+    height: 80px;
+    margin: 0 auto;
+}
+.item-feedback-content p{
+    margin: 15px 0;
+    font-style: italic;
+}
+.item-blog-title{
+    font-weight: 700;
+    font-size: 18px;
+    margin: 15px 0;
+}
+.item-blog-title a{
+    color: #222;
+}
+.item-blog-title a:hover{
+    color: #90a94c;
+}
+.item-blog-desc{
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    color: #777;
+}
+.item-blog-date{
+    padding: 5px 10px;
+    background: #90a94c;
+    color: #fff;
+    margin-top: 15px;
+    display: inline-block;
+}
+.section-contact{
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+.item-contact-left{
+    padding: 45px 50px 20px 40px;
+    background: #90a94c;
+    color: #fff;
+    width: 100%;
+}
+.item-contact li{
+    margin-bottom: 20px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+}
+.item-contact li:first-child{
+    font-weight: 700;
+    margin-bottom: 30px;
+    font-size: 18px;
+}
+.item-contact li span{
+    display: block;
+    width: calc(100% - 25px);
+}
+.item-contact-right{
+    padding: 40px 45px;
+    background-color: #fff;
+    color: #3c4550;
+    width: 100%;
+}
+.item-title-contact{
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+.btn-submit-contact{
+    background-color: #90a94c;
+    color: #fff;
+}
+.btn-submit-contact:hover{
+    background-color: #506417;
+    color: #fff;
+}
+#modalContact{
+    top: 30%;
+}
+.msgSuccess,
+.msgError{
+    text-align: center;
+}
+.msgSuccess i{
+    font-size: 40px;
+    color: #08f008;
+}
+.msgError i{
+    font-size: 40px;
+    color: #f00808;
+}
+.msgSuccess span,
+.msgError span{
+    display: block;
+    margin-top: 10px;
+}
 .footer{
-    background: #1c2f3c;
+    background: #222;
     position: relative;
     padding: 15px 0;
     color: #fff;
 }
 .footer a{
-    color: #19b7f9;
+    color: #90a94c;
 }
 .footer a:hover{
     color: #fff;
+}
+.item-breadcrumb{
+    background-position: top center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+    position: relative;
+    z-index: 1;
+    margin-bottom: 30px;
+}
+.item-breadcrumb:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: -1;
+}
+.item-breadcrumb-content{
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #fff;
+    width: 100%;
+    text-align: center;
+}
+.item-breadcrumb-content a{
+    color: #fff;
+}
+.item-breadcrumb-content a:hover{
+    color: #90a94c;
+}
+.item-breadcrumb-content span{
+    color: #90a94c;
+}
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 0;
+    font-size: 14px;
+    font-weight: bold;
+}
+.pagination a {
+    color: black;
+    padding: 8px 15px;
+}
+.pagination a.active {
+    background-color: #90a94c;
+    color: white;
+    border-radius: 5px;
+}
+.pagination a:hover:not(.active) {
+    background-color: #ddd;
+    border-radius: 5px;
+}
+.item-blog-detail{
+    margin-bottom: 30px;
+}
+.item-blog-detail-date{
+    font-size: 12px;
+    font-style: italic;
+    margin-bottom: 15px;
+    color: #777;
+}
+.title-detail{
+    font-size: 16px;
+    font-weight: 700;
+    color: #e84c3d;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+}
+.item-course-detail-fee{
+    background: #f8f9f8;
+    padding: 7px 20px;
+    margin-bottom: 20px;
+}
+.item-course-detail-fee span{
+    font-size: 22px;
+    color: #90a94c;
+}
+.item-gallery-image{
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+}
+.item-gallery-image img{
+    transition: transform 0.3s ease-in-out;
+}
+.item-gallery-image:hover img{
+    transform: scale(1.2);
+    transition: transform 0.3s ease-in-out;
+}
+@media (min-width: 1025px) {
+    .non-padding-left{
+        padding-left: 0;
+    }
+    .non-padding-right{
+        padding-right: 0;
+    }
+}
+@media (max-width: 1024.98px) {
+    .item-nav li {
+        padding-left: 20px;
+    }
+    .item-nav{
+        width: auto;
+    }
+    .item-slider{
+        height: 600px;
+    }
+}
+@media (max-width: 992px) {
+    .top-header,
+    .item-nav{
+        display: none;
+    }
+    .section-contact,
+    .section-blog,
+    .section-feedback,
+    .section-course,
+    .section-about-us{
+        padding: 40px 0;
+    }
+    .item-blog-image,
+    .item-course-image{
+        height: 320px;
+    }
+    #itemMenuMobile{
+        display: inline-block;
+        margin-right: 20px;
+    }
 }

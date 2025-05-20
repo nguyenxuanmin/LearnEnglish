@@ -34,6 +34,6 @@ class ClientAuthController extends Controller
 
     public function logout(){
         Auth::logout();
-        return redirect()->route('login_client');
+        return redirect()->route('index');
     }
 }
