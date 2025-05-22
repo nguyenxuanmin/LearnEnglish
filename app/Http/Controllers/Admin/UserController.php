@@ -163,7 +163,7 @@ class UserController extends Controller
         ]);
     }
 
-    public function change_stt(Request $request){
+    public function changeStt(Request $request){
         $user = User::find($request->id);
         if ($request->stt == 'show') {
             $user->status = 1;
@@ -176,7 +176,7 @@ class UserController extends Controller
         ]);
     }
 
-    public function update_password(Request $request){
+    public function updatePassword(Request $request){
         $user = User::find($request->id);
         $user->password = Hash::make('123456');
         $user->save();

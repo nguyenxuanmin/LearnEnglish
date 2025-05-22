@@ -27,6 +27,8 @@ use App\Http\Controllers\Client\ClientAboutController;
 use App\Http\Controllers\Client\ClientCourseController;
 use App\Http\Controllers\Client\ClientBlogController;
 use App\Http\Controllers\Client\ClientGalleryController;
+use App\Http\Controllers\Client\ClientUserController;
+use App\Http\Controllers\Client\ClientStudyController;
 
 Route::group(['middleware' => [SystemAuth::class]], function () {
     Route::group(['middleware' => [AdminAuth::class]], function () {
@@ -38,7 +40,7 @@ Route::group(['middleware' => [SystemAuth::class]], function () {
         Route::post('/course/save', [CourseController::class, 'save'])->name('save_course');
         Route::post('/course/delete', [CourseController::class, 'delete'])->name('delete_course');
         Route::get('/course/edit/{id}', [CourseController::class, 'edit'])->name('edit_course');
-        Route::post('/course/change_stt', [CourseController::class, 'change_stt'])->name('change_stt_course');
+        Route::post('/course/change_stt', [CourseController::class, 'changeStt'])->name('change_stt_course');
         Route::get('/course/search', [CourseController::class, 'search'])->name('search_course');
         // Bài học
         Route::get('/unit', [UnitController::class, 'index'])->name('list_unit');
@@ -46,7 +48,7 @@ Route::group(['middleware' => [SystemAuth::class]], function () {
         Route::post('/unit/save', [UnitController::class, 'save'])->name('save_unit');
         Route::post('/unit/delete', [UnitController::class, 'delete'])->name('delete_unit');
         Route::get('/unit/edit/{id}', [UnitController::class, 'edit'])->name('edit_unit');
-        Route::post('/unit/change_stt', [UnitController::class, 'change_stt'])->name('change_stt_unit');
+        Route::post('/unit/change_stt', [UnitController::class, 'changeStt'])->name('change_stt_unit');
         Route::get('/unit/search', [UnitController::class, 'search'])->name('search_unit');
         // Học viên
         Route::get('/user', [UserController::class, 'index'])->name('list_user');
@@ -54,8 +56,8 @@ Route::group(['middleware' => [SystemAuth::class]], function () {
         Route::post('/user/save', [UserController::class, 'save'])->name('save_user');
         Route::post('/user/delete', [UserController::class, 'delete'])->name('delete_user');
         Route::get('/user/edit/{id}', [UserController::class, 'edit'])->name('edit_user');
-        Route::post('/user/change_stt', [UserController::class, 'change_stt'])->name('change_stt_user');
-        Route::post('/user/update_password', [UserController::class, 'update_password'])->name('update_password');
+        Route::post('/user/change_stt', [UserController::class, 'changeStt'])->name('change_stt_user');
+        Route::post('/user/update_password', [UserController::class, 'updatePassword'])->name('update_password');
         Route::get('/user/search', [UserController::class, 'search'])->name('search_user');
         // Tiến độ học tập
         Route::get('/progress', [ProgressController::class, 'index'])->name('list_progress');
@@ -75,7 +77,7 @@ Route::group(['middleware' => [SystemAuth::class]], function () {
         Route::post('/blog/save', [BlogController::class, 'save'])->name('save_blog');
         Route::post('/blog/delete', [BlogController::class, 'delete'])->name('delete_blog');
         Route::get('/blog/edit/{id}', [BlogController::class, 'edit'])->name('edit_blog');
-        Route::post('/blog/change_stt', [BlogController::class, 'change_stt'])->name('change_stt_blog');
+        Route::post('/blog/change_stt', [BlogController::class, 'changeStt'])->name('change_stt_blog');
         Route::get('/blog/search', [BlogController::class, 'search'])->name('search_blog');
         // Giới thiệu
         Route::get('/about', [AboutController::class, 'show'])->name('about');
@@ -111,9 +113,16 @@ Route::group(['middleware' => [SystemAuth::class]], function () {
     Route::get('/chia-se-kien-thuc', [ClientBlogController::class, 'show'])->name('blog');
     Route::get('/chia-se-kien-thuc/{slug}', [ClientBlogController::class, 'detail'])->name('blog_detail');
     Route::get('/thu-vien-anh', [ClientGalleryController::class, 'show'])->name('gallery');
-
+    
     Route::group(['middleware' => [ClientAuth::class]], function () {
         Route::get('/logout', [ClientAuthController::class, 'logout'])->name('logout_client');
+        Route::get('/thong-tin-tai-khoan', [ClientUserController::class, 'show'])->name('info_user');
+        Route::post('/thong-tin-tai-khoan', [ClientUserController::class, 'update'])->name('update_user');
+        Route::get('/thay-doi-mat-khau', [ClientUserController::class, 'showPassword'])->name('change_password');
+        Route::post('/thay-doi-mat-khau', [ClientUserController::class, 'change_password'])->name('change_password');
+        Route::get('/khoa-hoc-dang-hoc', [ClientStudyController::class, 'show'])->name('study');
+        Route::post('/get-unit', [ClientStudyController::class, 'getUnits'])->name('get_unit');
+        Route::post('/get-lesson', [ClientStudyController::class, 'getLessons'])->name('get_lesson');
     });
 
     Route::group(['middleware' => [LoginClientAuth::class]], function () {

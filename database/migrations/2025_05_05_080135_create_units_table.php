@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('units', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
-            $table->string('slug')->unique();
+            $table->string('name')->nullable();
+            $table->string('slug')->nullable();
             $table->text('description')->nullable();
             $table->boolean('status')->default(1);
             $table->foreignId('course_id')->constrained()->onDelete('cascade');

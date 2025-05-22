@@ -1,5 +1,14 @@
 @php
     $company = DB::select("SELECT * FROM companies");
+    $currentUrl = $_SERVER['REQUEST_URI'];
+    $listUrl = ["thong-tin-tai-khoan","thay-doi-mat-khau","khoa-hoc-dang-hoc"];
+    $isFoundUrl = false;
+    foreach ($listUrl as $item) {
+        if (strpos($currentUrl, $item) !== false) {
+            $isFoundUrl = true;
+            break;
+        }
+    }
 @endphp
 <!DOCTYPE html>
 <html>
@@ -21,12 +30,25 @@
         <link rel="stylesheet" href="{{asset('css/index.css')}}"/>
     </head>
     <body>
-        @include('client.layout.header')
-        <main>
-            @yield('content')
-            @include('client.layout.contact')
+        <div class="wrapper">
+            @include('client.layout.header')
+            <main>
+                @yield('content')
+                @if ($isFoundUrl === false)
+                    @include('client.layout.contact')
+                @endif
+            </main>
             @include('client.layout.footer')
-        </main>
+        </div>
+        <div class="modal fade" id="modalAlert" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div id="showMessage"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div id="scrollToTop"><i class="fa-solid fa-arrow-up"></i></div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
         <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>

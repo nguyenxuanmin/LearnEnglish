@@ -120,7 +120,7 @@ class BlogController extends Controller
         ]);
     }
     
-    public function change_stt(Request $request){
+    public function changeStt(Request $request){
         $blog = Blog::find($request->id);
         if ($request->stt == 'show') {
             $blog->status = 1;

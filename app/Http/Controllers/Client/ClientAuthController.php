@@ -18,7 +18,7 @@ class ClientAuthController extends Controller
             ]);
         }
 
-        $credentials = ['email' => $email, 'password' => $password];
+        $credentials = ['email' => $email, 'password' => $password,'status' => 1];
         if (auth()->attempt($credentials)) {
             return response()->json([
                 'success' => true,

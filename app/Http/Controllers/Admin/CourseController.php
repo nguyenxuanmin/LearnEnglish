@@ -118,7 +118,7 @@ class CourseController extends Controller
         ]);
     }
 
-    public function change_stt(Request $request){
+    public function changeStt(Request $request){
         $course = Course::find($request->id);
         if ($request->stt == 'show') {
             $course->status = 1;

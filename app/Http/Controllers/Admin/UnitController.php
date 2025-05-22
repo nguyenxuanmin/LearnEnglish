@@ -77,24 +77,24 @@ class UnitController extends Controller
             ]);
         }
 
-        if($action == "edit"){
-            $checkEmpty = Unit::where('slug',$slug)->where('id','<>',$request->id)->first();
-        }else{
-            $checkEmpty = Unit::where('slug',$slug)->first();
-        }
-        if(isset($checkEmpty)){
-            return response()->json([
-                'success' => false,
-                'message' => 'Tên unit đã tạo.'
-            ]);
-        }
-
         if(isset($request->course)){
             $course_id = $request->course;
         }else{
             return response()->json([
                 'success' => false,
                 'message' => 'Khóa học không được để trống.'
+            ]);
+        }
+
+        if($action == "edit"){
+            $checkEmpty = Unit::where('slug',$slug)->where('id','<>',$request->id)->where('course_id',$course_id)->first();
+        }else{
+            $checkEmpty = Unit::where('slug',$slug)->where('course_id',$course_id)->first();
+        }
+        if(isset($checkEmpty)){
+            return response()->json([
+                'success' => false,
+                'message' => 'Tên unit đã tạo.'
             ]);
         }
 
@@ -207,7 +207,7 @@ class UnitController extends Controller
         ]);
     }
 
-    public function change_stt(Request $request){
+    public function changeStt(Request $request){
         $unit = Unit::find($request->id);
         if ($request->stt == 'show') {
             $unit->status = 1;

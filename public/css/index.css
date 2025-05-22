@@ -14,6 +14,14 @@ ul{
 a{
     text-decoration: none;
 }
+main{
+    flex: 1;
+}
+.wrapper{
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
 .mx-15{
     margin: 0 -15px;
 }
@@ -133,9 +141,10 @@ a{
 }
 .item-user-header-content a{
     display: block;
-    padding: 5px 15px;
+    padding: 7px 20px;
     color: #333;
     border-top: 1px solid #333;
+    font-size: 16px;
 }
 .item-user-header-content a:hover{
     color: #90a94c;
@@ -221,6 +230,9 @@ a{
 .my-slider .slick-arrow{
     top: 50%;
 }
+.section-study,
+.section-change-password,
+.section-user,
 .section-contact,
 .section-blog,
 .section-feedback,
@@ -372,7 +384,7 @@ a{
     background-color: #506417;
     color: #fff;
 }
-#modalContact{
+#modalAlert{
     top: 30%;
 }
 .msgSuccess,
@@ -390,6 +402,7 @@ a{
 .msgSuccess span,
 .msgError span{
     display: block;
+    font-size: 16px;
     margin-top: 10px;
 }
 .footer{
@@ -498,6 +511,75 @@ a{
     transform: scale(1.2);
     transition: transform 0.3s ease-in-out;
 }
+.item-user-avatar{
+    height: 150px;
+    width: 150px;
+    margin: 0 auto;
+}
+.item-user-avatar img{
+    border: 3px solid #506417;
+}
+.item-user-detail li:first-child{
+    font-size: 20px;
+}
+.item-study-alert{
+    background: #f8f9f8;
+    font-size: 18px;
+    font-weight: 700;
+    padding: 7px 15px;
+    color: #f00808;
+}
+.item-unit{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+.item-unit-name{
+    border: 1px solid #506417;
+    color: #506417;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 7px 20px;
+    font-size: 16px;
+    display: inline-block;
+    border-radius: 7px;
+    cursor: pointer;
+    margin: 0 10px 15px;
+}
+.item-lesson.active,
+.item-lesson:hover,
+.item-unit-name.active,
+.item-unit-name:hover{
+    background-color: #506417;
+    color: #fff;
+}
+.unit-content-title{
+    font-size: 16px;
+    text-transform: uppercase;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 20px;
+}
+.item-lesson{
+    padding: 7px;
+    background: #f8f9f8;
+    cursor: pointer;
+    margin-bottom: 2px;
+    border-radius: 5px;
+}
+.item-document{
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+.item-document a{
+    color: #506417;
+}
+#lessonContent,
+#unitContent{
+    max-height: 500px;
+    overflow-y: auto;
+}
 @media (min-width: 1025px) {
     .non-padding-left{
         padding-left: 0;
@@ -522,6 +604,9 @@ a{
     .item-nav{
         display: none;
     }
+    .section-study,
+    .section-change-password,
+    .section-user,
     .section-contact,
     .section-blog,
     .section-feedback,

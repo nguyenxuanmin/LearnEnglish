@@ -29,15 +29,6 @@
         </div>
     </div>
 </section>
-<div class="modal fade" id="modalContact" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-body">
-                <div id="showMessage"></div>
-            </div>
-        </div>
-    </div>
-</div>
 <script>
     $(document).ready(function() {
         $('#formContact').on('submit', function(e){
@@ -58,7 +49,7 @@
                 processData: false, 
                 success: function(response) {
                     var message = "";
-                    var modalContact = new bootstrap.Modal(document.getElementById('modalContact'), {
+                    var modalContact = new bootstrap.Modal(document.getElementById('modalAlert'), {
                         backdrop: 'static',
                         keyboard: false
                     });
