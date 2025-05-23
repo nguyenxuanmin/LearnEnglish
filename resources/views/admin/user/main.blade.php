@@ -22,42 +22,42 @@
     <div class="app-content">
         <div class="container-fluid">
             <div class="card card-primary card-outline mb-4">
-                <form id="submitForm" enctype="multipart/form-data">
+                <form id="submitForm" enctype="multipart/form-data" data-url-submit="{{route('save_user')}}" data-url-complete="{{route('list_user')}}">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-12 col-md-6">
                                 <div class="mb-3">
-                                    <label for="name" class="form-label">Tên học viên</label>
+                                    <label class="form-label">Tên học viên</label>
                                     <input type="text" class="form-control" name="name" value="@if (isset($user)){{$user->name}}@endif">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="email" class="form-label">Emai</label>
+                                    <label class="form-label">Emai</label>
                                     <input type="email" class="form-control" name="email" value="@if (isset($user)){{$user->email}}@endif">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="phone" class="form-label">Số điện thoại</label>
+                                    <label class="form-label">Số điện thoại</label>
                                     <input type="text" class="form-control" name="phone" value="@if (isset($user)){{$user->phone}}@endif">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="address" class="form-label">Địa chỉ</label>
+                                    <label class="form-label">Địa chỉ</label>
                                     <input type="text" class="form-control" name="address" value="@if (isset($user)){{$user->address}}@endif">
                                 </div>
                             </div>
                             <div class="col-12 col-md-6">
                                 <div class="mb-3">
-                                    <label for="date_start" class="form-label">Ngày đăng ký học</label>
+                                    <label class="form-label">Ngày đăng ký học</label>
                                     <input type="date" class="form-control" name="date_start" value="@if (isset($user)){{$user->date_start->format('Y-m-d');}}@else{{now()->format('Y-m-d');}}@endif">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="avatar" class="form-label">Avatar</label>
-                                    <input type="file" class="form-control mb-3" name="avatar" id="avatar" accept="image/*">
-                                    <div class="avatarContent">
-                                        <img id="avatarContent" src="@if (isset($user) && $user->avatar != ""){{asset('storage/users/' . basename($user->avatar))}}@else{{asset('library/admin/default-image.png')}}@endif" alt="Avatar preview" style="max-width: 100%; max-height: 150px;">
+                                    <label class="form-label">Avatar</label>
+                                    <input type="file" class="form-control mb-3" name="avatar" id="imageUpload" accept="image/*">
+                                    <div class="imageContent">
+                                        <img id="imageContent" src="@if (isset($user) && $user->avatar != ""){{asset('storage/users/' . basename($user->avatar))}}@else{{asset('library/admin/default-image.png')}}@endif" alt="Avatar preview" style="max-width: 100%; max-height: 150px;">
                                     </div>
                                 </div>
                             </div>
                             <div class="col-12 mb-3">
-                                <label for="status" class="form-label">Hoạt động/Không hoạt động</label>
+                                <label class="form-label">Hoạt động/Không hoạt động</label>
                                 <input type="checkbox" class="form-check-input" name="status" @if (!isset($user) || (isset($user) && $user->status == 1)) checked @endif>
                             </div>
                             <div class="col-12 mb-3 text-end">
@@ -72,47 +72,4 @@
             </div>
         </div>
     </div>
-    <script>
-        $(document).ready(function() {
-            document.getElementById('avatar').addEventListener('change', function(event) {
-                const file = event.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        const imageUrl = e.target.result;
-                        const imgElement = document.getElementById('avatarContent'); 
-                        imgElement.src = imageUrl; 
-                        imgElement.style.display = 'block';
-                    }
-                    reader.readAsDataURL(file);
-                }
-            });
-
-            $('#submitForm').on('submit', function(e){
-                e.preventDefault();
-                var formData = new FormData(this);
-                var csrfToken = $('meta[name="csrf-token"]').attr('content');
-                $.ajax({
-                    url: '{{ route('save_user') }}',
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken
-                    },
-                    type: 'POST',
-                    data: formData,
-                    contentType: false,
-                    processData: false, 
-                    success: function(response) {
-                        if (response.success == true) {
-                            location.href = '{{route('list_user')}}';
-                        }else{
-                            alert(response.message);
-                        }
-                    },
-                    error: function(xhr) {
-                        console.log(xhr);
-                    }
-                });
-            });
-        });
-    </script>
 @endsection

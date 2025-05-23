@@ -22,16 +22,16 @@
     <div class="app-content">
         <div class="container-fluid">
             <div class="card card-primary card-outline mb-4">
-                <form id="submitForm" enctype="multipart/form-data">
+                <form id="submitForm" enctype="multipart/form-data" data-url-submit="{{route('save_unit')}}" data-url-complete="{{route('list_unit')}}">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-12 col-md-6">
                                 <div class="mb-3">
-                                    <label for="name" class="form-label">Tên unit</label>
+                                    <label class="form-label">Tên unit</label>
                                     <input type="text" class="form-control" name="name" value="@if (isset($unit)){{$unit->name}}@endif">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="course" class="form-label">Khóa học</label>
+                                    <label class="form-label">Khóa học</label>
                                     <select class="form-select" name="course">
                                         @if (isset($courses))
                                             @if (!isset($unit))
@@ -46,11 +46,11 @@
                                     </select>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="description" class="form-label">Mô tả unit</label>
+                                    <label class="form-label">Mô tả unit</label>
                                     <textarea class="form-control" name="description" rows="4">@if (isset($unit)){{$unit->description}}@endif</textarea>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="status" class="form-label">Ẩn/Hiện</label>
+                                    <label class="form-label">Ẩn/Hiện</label>
                                     <input type="checkbox" class="form-check-input" name="status" @if (!isset($unit) || (isset($unit) && $unit->status == 1)) checked @endif>
                                 </div>
                             </div>
@@ -74,6 +74,7 @@
                                                                 <div class="mb-3">
                                                                     <label class="form-label">Tên bài học</label>
                                                                     <input type="text" class="form-control" name="nameLesson[]" value="{{$lesson->name}}">
+                                                                    <input type="hidden" class="form-control" name="idLesson[]" value="{{$lesson->id}}">
                                                                 </div>
                                                                 <div class="mb-3">
                                                                     <label class="form-label">Nội dung bài học</label>
@@ -88,7 +89,7 @@
                                                                     <input class="form-control" name="fileLesson{{$key + 1}}[]" type="file" multiple accept=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx,.xls,.xlsx" onchange="handleFileSelect(this, {{$key + 1}})">
                                                                     @foreach ($lesson->documents as $item)
                                                                         <div class="d-flex align-items-center justify-content-between mt-2 file-old">
-                                                                            <div>{{$item->name}}</div>
+                                                                            <div style="width: 85%; word-break: break-all;">{{$item->name}}</div>
                                                                             <button type="button" class="btn btn-danger btn-sm" onclick="removeFile(this)">Xóa file</button>
                                                                         </div>
                                                                         <input type="hidden" name="fileLessonOld[{{$key + 1}}][]" value="{{$item->name}}" class="file-hidden">
@@ -139,6 +140,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Tên bài học</label>
                                 <input type="text" class="form-control" name="nameLesson[]" value="">
+                                <input type="hidden" class="form-control" name="idLesson[]" value="">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Nội dung bài học</label>
@@ -166,12 +168,13 @@
             $(`#lessonForm .accordion-item:last .contentLesson`).summernote({
                 height: 200
             });
-
+            toastr.success('Đã thêm bài học!');
             renumberLessons();
         }
 
         function removeLesson(btn) {
             $(btn).closest('.accordion-item').remove();
+            toastr.error('Đã xóa bài học!');
             renumberLessons();
         }
 
@@ -215,6 +218,8 @@
                 const div = document.createElement('div');
                 div.className = 'd-flex align-items-center justify-content-between mt-2';
                 const div2 = document.createElement('div');
+                div2.style.width = '85%';
+                div2.style.wordBreak = 'break-all';
                 div2.textContent = `${file.name}`;
                 const btn = document.createElement('button');
                 btn.textContent = `Xóa file`;
@@ -250,31 +255,6 @@
         $(document).ready(function() {
             $('.contentLesson').summernote({
                 height: 300
-            });
-            $('#submitForm').on('submit', function(e){
-                e.preventDefault();
-                var formData = new FormData(this);
-                var csrfToken = $('meta[name="csrf-token"]').attr('content');
-                $.ajax({
-                    url: '{{ route('save_unit') }}',
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken
-                    },
-                    type: 'POST',
-                    data: formData,
-                    contentType: false,
-                    processData: false, 
-                    success: function(response) {
-                        if (response.success == true) {
-                            location.href = '{{route('list_unit')}}';
-                        }else{
-                            alert(response.message);
-                        }
-                    },
-                    error: function(xhr) {
-                        console.log(xhr);
-                    }
-                });
             });
         });
     </script>

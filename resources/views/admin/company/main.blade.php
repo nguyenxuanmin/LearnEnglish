@@ -21,24 +21,24 @@
     <div class="app-content">
         <div class="container-fluid">
             <div class="card card-primary card-outline mb-4">
-                <form id="submitForm">
+                <form id="submitForm" enctype="multipart/form-data" data-url-submit="{{route('save_company')}}" data-url-complete="">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-12 col-md-6">
                                 <div class="mb-3">
-                                    <label for="name" class="form-label">Tên công ty</label>
+                                    <label class="form-label">Tên công ty</label>
                                     <input type="text" class="form-control" name="name" value="@if (count($company)){{$company[0]->name}}@endif">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="address" class="form-label">Địa chỉ</label>
+                                    <label class="form-label">Địa chỉ</label>
                                     <input type="text" class="form-control" name="address" value="@if (count($company)){{$company[0]->address}}@endif">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="hotline" class="form-label">Hotline</label>
+                                    <label class="form-label">Hotline</label>
                                     <input type="text" class="form-control" name="hotline" value="@if (count($company)){{$company[0]->hotline}}@endif">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="email" class="form-label">Email</label>
+                                    <label class="form-label">Email</label>
                                     <input type="text" class="form-control" name="email" value="@if (count($company)){{$company[0]->email}}@endif">
                                 </div>
                             </div>
@@ -95,33 +95,6 @@
                     }
                     reader.readAsDataURL(file);
                 }
-            });
-
-            $('#submitForm').on('submit', function(e){
-                e.preventDefault();
-                var formData = new FormData(this);
-                var csrfToken = $('meta[name="csrf-token"]').attr('content');
-                $.ajax({
-                    url: '{{ route('save_company') }}',
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken
-                    },
-                    type: 'POST',
-                    data: formData,
-                    contentType: false,
-                    processData: false, 
-                    success: function(response) {
-                        if (response.success == true) {
-                            alert("Cập nhật thành công");
-                            location.reload();
-                        }else{
-                            alert(response.message);
-                        }
-                    },
-                    error: function(xhr) {
-                        console.log(xhr);
-                    }
-                });
             });
         });
     </script>

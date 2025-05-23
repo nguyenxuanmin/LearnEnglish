@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Gallery;
 use App\Services\AdminService;
 
@@ -110,7 +111,7 @@ class GalleryController extends Controller
     public function search(Request $request){
         $infoSearch = $request->search;
         $galleries = Gallery::where('name','LIKE','%'.$infoSearch.'%')->orderBy('name','asc')->paginate(20);
-        return view('admin.slider.list',[
+        return view('admin.gallery.list',[
             'infoSearch' => $infoSearch,
             'galleries' => $galleries
         ]);

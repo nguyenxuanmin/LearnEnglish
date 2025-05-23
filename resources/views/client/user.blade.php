@@ -94,25 +94,23 @@
                     contentType: false,
                     processData: false, 
                     success: function(response) {
-                        var message = "";
-                        var modalContact = new bootstrap.Modal(document.getElementById('modalAlert'), {
-                            backdrop: 'static',
-                            keyboard: false
-                        });
                         if(response.success == true){
-                            message = "<div class='msgSuccess'><i class='fa-solid fa-check'></i><span>Cập nhật thành công.</span></div>";
-                            modalContact.show();
-                            setTimeout(() => {
+                            Swal.fire({
+                                text: "Cập nhật thành công!",
+                                icon: "success",
+                                showConfirmButton: false,
+                                timer: 2000
+                            }).then((result) => {
                                 location.href = '{{route('index')}}';
-                            }, 3000);
+                            });
                         }else{
-                            message = "<div class='msgError'><i class='fa-solid fa-circle-exclamation'></i><span>"+response.message+"</span></div>";
-                            modalContact.show();
-                            setTimeout(() => {
-                                modalContact.hide();
-                            }, 2000);
+                            Swal.fire({
+                                text: response.message,
+                                icon: "error",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
                         }
-                        $('#showMessage').html(message);
                         btn.disabled = false;
                         btn.innerText = 'Cập nhật';
                     },

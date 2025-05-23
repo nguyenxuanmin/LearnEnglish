@@ -12,7 +12,7 @@ use App\Models\Lesson;
 class ClientStudyController extends Controller
 {
     public function show(){
-        $study = Progress::where('user_id',Auth::id())->first();
+        $study = Progress::where('user_id',Auth::id())->firstOrFail();
         $course = $study->course;
         $units = $course->units()->with(['lessons.documents'])->orderBy('created_at', 'asc')->get();
         if(isset($units)){

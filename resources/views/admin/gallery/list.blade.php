@@ -60,7 +60,7 @@
                             <td valign="middle" align="center">{{$gallery->created_at->format('d/m/Y');}}</td>
                             <td valign="middle" align="center">
                                 <a href="{{route('edit_gallery',[$gallery->id])}}" class="btn btn-outline-info" title="Sửa"><i class="fa-solid fa-pen-to-square"></i></a>
-                                <button class="btn btn-outline-danger" title="Xóa" onclick="delete_gallery({{$gallery->id}});"><i class="fa-solid fa-trash"></i></button>
+                                <button class="btn btn-outline-danger" title="Xóa" onclick="deleteItem({{$gallery->id}},'ảnh','{{route('delete_gallery')}}');"><i class="fa-solid fa-trash"></i></button>
                             </td>
                         </tr>
                     @endforeach
@@ -69,26 +69,4 @@
             {{$galleries->links('admin.layout.pagination')}}
         </div>
     </div>
-    <script>
-        function delete_gallery(id){
-            let result  = confirm("Bạn có muốn xóa khóa học?");
-            if (result) {
-                var csrfToken = $('meta[name="csrf-token"]').attr('content');
-                $.ajax({
-                    url: '{{ route('delete_gallery') }}',
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken
-                    },
-                    type: 'POST',
-                    data: {id: id},
-                    success: function(response) {
-                        location.href = '{{route('list_gallery')}}';
-                    },
-                    error: function(xhr) {
-                        console.log(xhr);
-                    }
-                });
-            }
-        }
-    </script>
 @endsection

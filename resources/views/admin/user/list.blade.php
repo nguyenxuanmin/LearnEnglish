@@ -63,15 +63,15 @@
                             <td valign="middle">{{$user->phone}}</td>
                             <td valign="middle" align="center">
                                 @if ($user->status == 1)
-                                    <a href="javascript:void(0);" title="Hoạt động" class="text-success" onclick="change_stt({{$user->id}},'hide');"><i class="fa-solid fa-circle-check"></i></a>
+                                    <a href="javascript:void(0);" title="Hoạt động" class="text-success" onclick="changeStt({{$user->id}},'hide','{{route('change_stt_user')}}');"><i class="fa-solid fa-circle-check"></i></a>
                                 @else
-                                    <a href="javascript:void(0);" title="Không hoạt động" class="text-danger" onclick="change_stt({{$user->id}},'show');"><i class="fa-solid fa-circle-xmark"></i></a>
+                                    <a href="javascript:void(0);" title="Không hoạt động" class="text-danger" onclick="changeStt({{$user->id}},'show','{{route('change_stt_user')}}');"><i class="fa-solid fa-circle-xmark"></i></a>
                                 @endif
                             </td>
                             <td valign="middle" align="center">
                                 <a href="{{route('edit_user',[$user->id])}}" class="btn btn-outline-info" title="Sửa"><i class="fa-solid fa-pen-to-square"></i></a>
-                                <button class="btn btn-outline-success" title="Cập nhật mật khẩu" onclick="update_password({{$user->id}},'{{$user->name}}');"><i class="fa-solid fa-rotate"></i></button>
-                                <button class="btn btn-outline-danger" title="Xóa" onclick="delete_user({{$user->id}});"><i class="fa-solid fa-trash"></i></button>
+                                <button class="btn btn-outline-success" title="Cập nhật mật khẩu" onclick="updatePassword({{$user->id}},'{{$user->name}}');"><i class="fa-solid fa-rotate"></i></button>
+                                <button class="btn btn-outline-danger" title="Xóa" onclick="deleteItem({{$user->id}},'học viên','{{route('delete_user')}}');"><i class="fa-solid fa-trash"></i></button>
                             </td>
                         </tr>
                     @endforeach
@@ -81,68 +81,39 @@
         </div>
     </div>
     <script>
-        function delete_user(id){
-            let result  = confirm("Bạn có muốn xóa học viên?");
-            if (result) {
-                var csrfToken = $('meta[name="csrf-token"]').attr('content');
-                $.ajax({
-                    url: '{{ route('delete_user') }}',
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken
-                    },
-                    type: 'POST',
-                    data: {id: id},
-                    success: function(response) {
-                        location.href = '{{route('list_user')}}';
-                    },
-                    error: function(xhr) {
-                        console.log(xhr);
-                    }
-                });
-            }
-        }
-
-        function change_stt(id,stt){
-            var csrfToken = $('meta[name="csrf-token"]').attr('content');
-            $.ajax({
-                url: '{{ route('change_stt_user') }}',
-                headers: {
-                    'X-CSRF-TOKEN': csrfToken
-                },
-                type: 'POST',
-                data: {
-                    id: id,
-                    stt: stt
-                },
-                success: function(response) {
-                    location.href = '{{route('list_user')}}';
-                },
-                error: function(xhr) {
-                    console.log(xhr);
+        function updatePassword(id,name){
+            Swal.fire({
+                text: 'Bạn có muốn cập nhật mật khẩu cho học viên '+name+'?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Cập nhật',
+                cancelButtonText: 'Huỷ bỏ'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var csrfToken = $('meta[name="csrf-token"]').attr('content');
+                    $.ajax({
+                        url: '{{ route('update_password') }}',
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken
+                        },
+                        type: 'POST',
+                        data: {id: id},
+                        success: function(response) {
+                            Swal.fire({
+                                text: "Cập nhật thành công!",
+                                icon: "success",
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then((result) => {
+                                location.reload();
+                            });
+                        },
+                        error: function(xhr) {
+                            console.log(xhr);
+                        }
+                    });
                 }
             });
-        }
-
-        function update_password(id,name){
-            let result  = confirm("Bạn có muốn cập nhật mật khẩu cho học viên "+name+"?");
-            if (result) {
-                var csrfToken = $('meta[name="csrf-token"]').attr('content');
-                $.ajax({
-                    url: '{{ route('update_password') }}',
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken
-                    },
-                    type: 'POST',
-                    data: {id: id},
-                    success: function(response) {
-                        alert('Cập nhật thành công');
-                        location.href = '{{route('list_user')}}';
-                    },
-                    error: function(xhr) {
-                        console.log(xhr);
-                    }
-                });
-            }
         }
     </script>
 @endsection

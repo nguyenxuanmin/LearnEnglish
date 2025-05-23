@@ -384,27 +384,6 @@ main{
     background-color: #506417;
     color: #fff;
 }
-#modalAlert{
-    top: 30%;
-}
-.msgSuccess,
-.msgError{
-    text-align: center;
-}
-.msgSuccess i{
-    font-size: 40px;
-    color: #08f008;
-}
-.msgError i{
-    font-size: 40px;
-    color: #f00808;
-}
-.msgSuccess span,
-.msgError span{
-    display: block;
-    font-size: 16px;
-    margin-top: 10px;
-}
 .footer{
     background: #222;
     position: relative;

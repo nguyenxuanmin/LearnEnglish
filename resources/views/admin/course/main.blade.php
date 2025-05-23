@@ -22,39 +22,39 @@
     <div class="app-content">
         <div class="container-fluid">
             <div class="card card-primary card-outline mb-4">
-                <form id="submitForm" enctype="multipart/form-data">
+                <form id="submitForm" enctype="multipart/form-data" data-url-submit="{{route('save_course')}}" data-url-complete="{{route('list_course')}}">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-12 col-md-6">
                                 <div class="mb-3">
-                                    <label for="name" class="form-label">Tên khóa học</label>
+                                    <label class="form-label">Tên khóa học</label>
                                     <input type="text" class="form-control" name="name" value="@if (isset($course)){{$course->name}}@endif">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="description" class="form-label">Mô tả khóa học</label>
+                                    <label class="form-label">Mô tả khóa học</label>
                                     <textarea class="form-control" name="description" rows="4">@if (isset($course)){{$course->description}}@endif</textarea>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="fee" class="form-label">Học phí</label>
+                                    <label class="form-label">Học phí</label>
                                     <input type="text" class="form-control" name="fee" id="fee" value="@if (isset($course)){{number_format($course->fee, 0, ',', '.')}}@endif">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="status" class="form-label">Ẩn/Hiện</label>
+                                    <label class="form-label">Ẩn/Hiện</label>
                                     <input type="checkbox" class="form-check-input" name="status" @if (!isset($course) || (isset($course) && $course->status == 1)) checked @endif>
                                 </div>
                             </div>
                             <div class="col-12 col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Hình ảnh</label>
-                                    <input type="file" class="form-control mb-3" name="image" id="image" accept="image/*">
+                                    <input type="file" class="form-control mb-3" name="image" id="imageUpload" accept="image/*">
                                     <div class="imageContent">
                                         <img id="imageContent" src="@if (isset($course) && $course->image != ""){{asset('storage/courses/' . basename($course->image))}}@else{{asset('library/admin/default-image.png')}}@endif" alt="Image preview" style="max-width: 100%; max-height: 250px;">
                                     </div>
                                 </div>
                             </div>
                             <div class="col-12 mb-3">
-                                <label for="content" class="form-label">Nội dung</label>
-                                <textarea name="content" id="content">@if (isset($course)){{$course->content}}@endif</textarea>
+                                <label class="form-label">Nội dung</label>
+                                <textarea name="content" id="contentSummernote">@if (isset($course)){{$course->content}}@endif</textarea>
                             </div>
                             <div class="col-12 mb-3 text-end">
                                 <button class="btn btn-primary">{{$titlePage}}</button>
@@ -70,55 +70,11 @@
     </div>
     <script>
         $(document).ready(function() {
-            $('#content').summernote({
-                height: 300
-            });
-
             $('#fee').on('input', function() {
                 let value = $(this).val();
                 value = value.replace(/[^0-9]/g, '');
                 let formatted = value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
                 $(this).val(formatted);
-            });
-
-            document.getElementById('image').addEventListener('change', function(event) {
-                const file = event.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        const imageUrl = e.target.result;
-                        const imgElement = document.getElementById('imageContent'); 
-                        imgElement.src = imageUrl; 
-                        imgElement.style.display = 'block';
-                    }
-                    reader.readAsDataURL(file);
-                }
-            });
-            
-            $('#submitForm').on('submit', function(e){
-                e.preventDefault();
-                var formData = new FormData(this);
-                var csrfToken = $('meta[name="csrf-token"]').attr('content');
-                $.ajax({
-                    url: '{{ route('save_course') }}',
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken
-                    },
-                    type: 'POST',
-                    data: formData,
-                    contentType: false,
-                    processData: false, 
-                    success: function(response) {
-                        if (response.success == true) {
-                            location.href = '{{route('list_course')}}';
-                        }else{
-                            alert(response.message);
-                        }
-                    },
-                    error: function(xhr) {
-                        console.log(xhr);
-                    }
-                });
             });
         });
     </script>

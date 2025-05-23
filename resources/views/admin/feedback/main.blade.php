@@ -22,7 +22,7 @@
     <div class="app-content">
         <div class="container-fluid">
             <div class="card card-primary card-outline mb-4">
-                <form id="submitForm" enctype="multipart/form-data">
+                <form id="submitForm" data-url-submit="{{route('save_feedback')}}" data-url-complete="{{route('list_feedback')}}">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-12 col-md-6">
@@ -45,7 +45,7 @@
                             <div class="col-12 col-md-6"></div>
                             <div class="col-12 mb-3">
                                 <label class="form-label">Nội dung</label>
-                                <textarea name="content" id="content">@if (isset($feedback)){{$feedback->content}}@endif</textarea>
+                                <textarea name="content" id="contentSummernote">@if (isset($feedback)){{$feedback->content}}@endif</textarea>
                             </div>
                             <div class="col-12 mb-3 text-end">
                                 <button class="btn btn-primary">{{$titlePage}}</button>
@@ -59,37 +59,4 @@
             </div>
         </div>
     </div>
-    <script>
-        $(document).ready(function() {
-            $('#content').summernote({
-                height: 300
-            });
-
-            $('#submitForm').on('submit', function(e){
-                e.preventDefault();
-                var formData = new FormData(this);
-                var csrfToken = $('meta[name="csrf-token"]').attr('content');
-                $.ajax({
-                    url: '{{ route('save_feedback') }}',
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken
-                    },
-                    type: 'POST',
-                    data: formData,
-                    contentType: false,
-                    processData: false, 
-                    success: function(response) {
-                        if (response.success == true) {
-                            location.href = '{{route('list_feedback')}}';
-                        }else{
-                            alert(response.message);
-                        }
-                    },
-                    error: function(xhr) {
-                        console.log(xhr);
-                    }
-                });
-            });
-        });
-    </script>
 @endsection

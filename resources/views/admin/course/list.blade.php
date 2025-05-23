@@ -62,15 +62,15 @@
                             <td valign="middle">{{number_format($course->fee, 0, ',', '.')}} VND</td>
                             <td valign="middle" align="center">
                                 @if ($course->status == 1)
-                                    <a href="javascript:void(0);" title="Hiển thị" class="text-success" onclick="change_stt({{$course->id}},'hide');"><i class="fa-solid fa-eye"></i></a>
+                                    <a href="javascript:void(0);" title="Hiển thị" class="text-success" onclick="changeStt({{$course->id}},'hide','{{route('change_stt_course')}}');"><i class="fa-solid fa-eye"></i></a>
                                 @else
-                                    <a href="javascript:void(0);" title="Ẩn" class="text-danger" onclick="change_stt({{$course->id}},'show');"><i class="fa-solid fa-eye-slash"></i></a>
+                                    <a href="javascript:void(0);" title="Ẩn" class="text-danger" onclick="changeStt({{$course->id}},'show','{{route('change_stt_course')}}');"><i class="fa-solid fa-eye-slash"></i></a>
                                 @endif
                             </td>
                             <td valign="middle" align="center">{{$course->created_at->format('d/m/Y');}}</td>
                             <td valign="middle" align="center">
                                 <a href="{{route('edit_course',[$course->id])}}" class="btn btn-outline-info" title="Sửa"><i class="fa-solid fa-pen-to-square"></i></a>
-                                <button class="btn btn-outline-danger" title="Xóa" onclick="delete_course({{$course->id}});"><i class="fa-solid fa-trash"></i></button>
+                                <button class="btn btn-outline-danger" title="Xóa" onclick="deleteItem({{$course->id}},'khóa học','{{route('delete_course')}}');"><i class="fa-solid fa-trash"></i></button>
                             </td>
                         </tr>
                     @endforeach
@@ -79,47 +79,4 @@
             {{$courses->links('admin.layout.pagination')}}
         </div>
     </div>
-    <script>
-        function delete_course(id){
-            let result  = confirm("Bạn có muốn xóa khóa học?");
-            if (result) {
-                var csrfToken = $('meta[name="csrf-token"]').attr('content');
-                $.ajax({
-                    url: '{{ route('delete_course') }}',
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken
-                    },
-                    type: 'POST',
-                    data: {id: id},
-                    success: function(response) {
-                        location.href = '{{route('list_course')}}';
-                    },
-                    error: function(xhr) {
-                        console.log(xhr);
-                    }
-                });
-            }
-        }
-
-        function change_stt(id,stt){
-            var csrfToken = $('meta[name="csrf-token"]').attr('content');
-            $.ajax({
-                url: '{{ route('change_stt_course') }}',
-                headers: {
-                    'X-CSRF-TOKEN': csrfToken
-                },
-                type: 'POST',
-                data: {
-                    id: id,
-                    stt: stt
-                },
-                success: function(response) {
-                    location.href = '{{route('list_course')}}';
-                },
-                error: function(xhr) {
-                    console.log(xhr);
-                }
-            });
-        }
-    </script>
 @endsection

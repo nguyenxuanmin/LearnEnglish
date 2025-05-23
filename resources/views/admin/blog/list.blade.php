@@ -60,15 +60,15 @@
                             <td valign="middle">{{$blog->name}}</td>
                             <td valign="middle" align="center">
                                 @if ($blog->status == 1)
-                                    <a href="javascript:void(0);" title="Hiển thị" class="text-success" onclick="change_stt({{$blog->id}},'hide');"><i class="fa-solid fa-eye"></i></a>
+                                    <a href="javascript:void(0);" title="Hiển thị" class="text-success" onclick="changeStt({{$blog->id}},'hide','{{ route('change_stt_blog') }}');"><i class="fa-solid fa-eye"></i></a>
                                 @else
-                                    <a href="javascript:void(0);" title="Ẩn" class="text-danger" onclick="change_stt({{$blog->id}},'show');"><i class="fa-solid fa-eye-slash"></i></a>
+                                    <a href="javascript:void(0);" title="Ẩn" class="text-danger" onclick="changeStt({{$blog->id}},'show','{{ route('change_stt_blog') }}');"><i class="fa-solid fa-eye-slash"></i></a>
                                 @endif
                             </td>
                             <td valign="middle" align="center">{{$blog->created_at->format('d/m/Y');}}</td>
                             <td valign="middle" align="center">
                                 <a href="{{route('edit_blog',[$blog->id])}}" class="btn btn-outline-info" title="Sửa"><i class="fa-solid fa-pen-to-square"></i></a>
-                                <button class="btn btn-outline-danger" title="Xóa" onclick="delete_blog({{$blog->id}});"><i class="fa-solid fa-trash"></i></button>
+                                <button class="btn btn-outline-danger" title="Xóa" onclick="deleteItem({{$blog->id}},'blog','{{route('delete_blog')}}')"><i class="fa-solid fa-trash"></i></button>
                             </td>
                         </tr>
                     @endforeach
@@ -77,47 +77,4 @@
             {{$blogs->links('admin.layout.pagination')}}
         </div>
     </div>
-    <script>
-        function delete_blog(id){
-            let result  = confirm("Bạn có muốn xóa blog?");
-            if (result) {
-                var csrfToken = $('meta[name="csrf-token"]').attr('content');
-                $.ajax({
-                    url: '{{ route('delete_blog') }}',
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken
-                    },
-                    type: 'POST',
-                    data: {id: id},
-                    success: function(response) {
-                        location.href = '{{route('list_blog')}}';
-                    },
-                    error: function(xhr) {
-                        console.log(xhr);
-                    }
-                });
-            }
-        }
-
-        function change_stt(id,stt){
-            var csrfToken = $('meta[name="csrf-token"]').attr('content');
-            $.ajax({
-                url: '{{ route('change_stt_blog') }}',
-                headers: {
-                    'X-CSRF-TOKEN': csrfToken
-                },
-                type: 'POST',
-                data: {
-                    id: id,
-                    stt: stt
-                },
-                success: function(response) {
-                    location.href = '{{route('list_blog')}}';
-                },
-                error: function(xhr) {
-                    console.log(xhr);
-                }
-            });
-        }
-    </script>
 @endsection

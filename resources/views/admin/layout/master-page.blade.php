@@ -15,6 +15,8 @@
         <link rel="stylesheet" href="{{asset('css/admin.css')}}"/>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
         <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
     </head>
@@ -29,6 +31,144 @@
         </div>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="{{asset('js/admin.js')}}"></script>
+        <script>
+            const csrfToken = $('meta[name="csrf-token"]').attr('content');
+            $(document).ready(function() {
+                toastr.options = {
+                    "positionClass": "toast-bottom-right"
+                }
+                
+                if ($('#contentSummernote').length) {
+                    $('#contentSummernote').summernote({
+                        height: 300
+                    });
+                }
+
+                if ($('#imageUpload').length) {
+                    document.getElementById('imageUpload').addEventListener('change', function(event) {
+                        const file = event.target.files[0];
+                        if (file) {
+                            const reader = new FileReader();
+                            reader.onload = function(e) {
+                                const imageUrl = e.target.result;
+                                const imgElement = document.getElementById('imageContent'); 
+                                imgElement.src = imageUrl; 
+                                imgElement.style.display = 'block';
+                            }
+                            reader.readAsDataURL(file);
+                        }
+                    });
+                }
+
+                if ($('#submitForm').length) {
+                    let urlSubmit = $('#submitForm').data('url-submit');
+                    let urlComplete = $('#submitForm').data('url-complete');
+                    $('#submitForm').on('submit', function(e){
+                        e.preventDefault();
+                        var formData = new FormData(this);
+                        $.ajax({
+                            url: urlSubmit,
+                            headers: {
+                                'X-CSRF-TOKEN': csrfToken
+                            },
+                            type: 'POST',
+                            data: formData,
+                            contentType: false,
+                            processData: false, 
+                            success: function(response) {
+                                if (response.success == true) {
+                                    Swal.fire({
+                                        text: "Cập nhật thành công!",
+                                        icon: "success",
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    }).then((result) => {
+                                        if(urlComplete != ""){
+                                            location.href = urlComplete;
+                                        }else{
+                                            location.reload();
+                                        }
+                                    });
+                                }else{
+                                    Swal.fire({
+                                        text: response.message,
+                                        icon: "error",
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    });
+                                }
+                            },
+                            error: function(xhr) {
+                                console.log(xhr);
+                            }
+                        });
+                    });
+                }
+            });
+
+            function deleteItem(id,transaction,url){
+                Swal.fire({
+                    text: 'Bạn có muốn xóa '+transaction+'?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Xóa',
+                    cancelButtonText: 'Huỷ bỏ'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: url,
+                            headers: {
+                                'X-CSRF-TOKEN': csrfToken
+                            },
+                            type: 'POST',
+                            data: {id: id},
+                            success: function(response) {
+                                Swal.fire({
+                                    text: "Xóa thành công!",
+                                    icon: "success",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                }).then((result) => {
+                                    location.reload();
+                                });
+                            },
+                            error: function(xhr) {
+                                console.log(xhr);
+                            }
+                        });
+                    }
+                });
+            }
+
+            function changeStt(id,stt,url){
+                $.ajax({
+                    url: url,
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    type: 'POST',
+                    data: {
+                        id: id,
+                        stt: stt
+                    },
+                    success: function(response) {
+                        Swal.fire({
+                            text: "Cập nhật thành công!",
+                            icon: "success",
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then((result) => {
+                            location.reload();
+                        });
+                    },
+                    error: function(xhr) {
+                        console.log(xhr);
+                    }
+                });
+            }
+        </script>
     </body>
 </html>

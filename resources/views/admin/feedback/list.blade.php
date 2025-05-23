@@ -60,7 +60,7 @@
                             <td valign="middle">{{mb_substr(strip_tags($feedback->content),0,150)}}@if(!empty($feedback->content))...@endif</td>
                             <td valign="middle" align="center">
                                 <a href="{{route('edit_feedback',[$feedback->id])}}" class="btn btn-outline-info" title="Sửa"><i class="fa-solid fa-pen-to-square"></i></a>
-                                <button class="btn btn-outline-danger" title="Xóa" onclick="delete_feedback({{$feedback->id}});"><i class="fa-solid fa-trash"></i></button>
+                                <button class="btn btn-outline-danger" title="Xóa" onclick="deleteItem({{$feedback->id}},'feedback','{{route('delete_feedback')}}');"><i class="fa-solid fa-trash"></i></button>
                             </td>
                         </tr>
                     @endforeach
@@ -69,26 +69,4 @@
             {{$feedbacks->links('admin.layout.pagination')}}
         </div>
     </div>
-    <script>
-        function delete_feedback(id){
-            let result  = confirm("Bạn có muốn xóa feedback?");
-            if (result) {
-                var csrfToken = $('meta[name="csrf-token"]').attr('content');
-                $.ajax({
-                    url: '{{ route('delete_feedback') }}',
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken
-                    },
-                    type: 'POST',
-                    data: {id: id},
-                    success: function(response) {
-                        location.href = '{{route('list_feedback')}}';
-                    },
-                    error: function(xhr) {
-                        console.log(xhr);
-                    }
-                });
-            }
-        }
-    </script>
 @endsection

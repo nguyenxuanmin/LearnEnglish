@@ -50,7 +50,7 @@
                             </td>
                             <td valign="middle" align="center">
                                 @if ($user->progress && $user->progress->course)
-                                    <button class="btn btn-outline-success" title="Hoàn thành khóa học" onclick="complete_progress({{$user->progress->id}},'{{$user->name}}');"><i class="fa-solid fa-check"></i></button>
+                                    <button class="btn btn-outline-success" title="Hoàn thành khóa học" onclick="completeProgress({{$user->progress->id}},'{{$user->name}}');"><i class="fa-solid fa-check"></i></button>
                                 @else
                                     <a href="{{route('update_progress',[$user->id])}}" class="btn btn-outline-success" title="Cập nhật tiến độ"><i class="fa-solid fa-rotate"></i></a>
                                 @endif
@@ -64,25 +64,39 @@
         </div>
     </div>
     <script>
-        function complete_progress(id,name){
-            let result  = confirm("Học viên "+name+" đã hoàn thành khóa học?");
-            if (result) {
-                var csrfToken = $('meta[name="csrf-token"]').attr('content');
-                $.ajax({
-                    url: '{{ route('complete_progress') }}',
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken
-                    },
-                    type: 'POST',
-                    data: {id: id},
-                    success: function(response) {
-                        location.href = '{{route('list_progress')}}';
-                    },
-                    error: function(xhr) {
-                        console.log(xhr);
-                    }
-                });
-            }
+        function completeProgress(id,name){
+            Swal.fire({
+                text: 'Học viên '+name+' đã hoàn thành khóa học?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Đã hoàn thành',
+                cancelButtonText: 'Chưa hoàn thành'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var csrfToken = $('meta[name="csrf-token"]').attr('content');
+                    $.ajax({
+                        url: '{{ route('complete_progress') }}',
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken
+                        },
+                        type: 'POST',
+                        data: {id: id},
+                        success: function(response) {
+                            Swal.fire({
+                                text: "Cập nhật thành công!",
+                                icon: "success",
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then((result) => {
+                                location.reload();
+                            });
+                        },
+                        error: function(xhr) {
+                            console.log(xhr);
+                        }
+                    });
+                }
+            });
         }
     </script>
 @endsection

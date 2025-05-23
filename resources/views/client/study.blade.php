@@ -7,60 +7,54 @@
 @section('content')
     <section class="section-study">
         <div class="container">
-            @if (!isset($study))
-                <div class="item-study-alert">
-                    Bạn chưa có khóa học nào
-                </div>
-            @else
-                <div class="title-index">
-                    <span>{{$course->name}}</span>
-                </div>
-                <div class="item-unit">
-                    @foreach ($units as $unit)
-                        <div class="item-unit-name @if (!empty($unitActive) && $unitActive->id == $unit->id) active @endif" data-id="{{$unit->id}}">{{$unit->name}}</div>
-                    @endforeach
-                </div>
-                <div class="row">
-                    <div class="col-12 col-lg-4 mb-3 mb-lg-0">
-                        <div class="card">
-                            <div class="card-body">
-                                <div id="unitContent">
-                                    @if (!empty($unitActive))
-                                        <div class="unit-content-title">{{$unitActive->name}}</div>
-                                        @foreach ($unitActive->lessons as $item)
-                                            <div class="item-lesson @if (!empty($lessonActive) && $lessonActive->id == $item->id) active @endif" data-id="{{$item->id}}">{{$item->name}}</div>
-                                        @endforeach
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-8">
-                        <div class="card">
-                            <div class="card-body">
-                                <div id="lessonContent">
-                                    @if (!empty($lessonActive))
-                                        <h4>{{$lessonActive->name}}</h4>
-                                        @if (!empty($lessonActive->content))
-                                            <div>
-                                                @php
-                                                    echo $lessonActive->content;
-                                                @endphp
-                                            </div>
-                                        @endif
-                                        @foreach ($lessonActive->documents as $item)
-                                            <div class="item-document">
-                                                <span>{{$item->name}}</span>
-                                                <a href="{{asset('storage/lesson_files/'.$item->name)}}" download title="Tải về"><i class="fa-solid fa-download"></i></a>
-                                            </div>
-                                        @endforeach
-                                    @endif
-                                </div>
+            <div class="title-index">
+                <span>{{$course->name}}</span>
+            </div>
+            <div class="item-unit">
+                @foreach ($units as $unit)
+                    <div class="item-unit-name @if (!empty($unitActive) && $unitActive->id == $unit->id) active @endif" data-id="{{$unit->id}}">{{$unit->name}}</div>
+                @endforeach
+            </div>
+            <div class="row">
+                <div class="col-12 col-lg-4 mb-3 mb-lg-0">
+                    <div class="card">
+                        <div class="card-body">
+                            <div id="unitContent">
+                                @if (!empty($unitActive))
+                                    <div class="unit-content-title">{{$unitActive->name}}</div>
+                                    @foreach ($unitActive->lessons as $item)
+                                        <div class="item-lesson @if (!empty($lessonActive) && $lessonActive->id == $item->id) active @endif" data-id="{{$item->id}}">{{$item->name}}</div>
+                                    @endforeach
+                                @endif
                             </div>
                         </div>
                     </div>
                 </div>
-            @endif
+                <div class="col-12 col-lg-8">
+                    <div class="card">
+                        <div class="card-body">
+                            <div id="lessonContent">
+                                @if (!empty($lessonActive))
+                                    <h4>{{$lessonActive->name}}</h4>
+                                    @if (!empty($lessonActive->content))
+                                        <div>
+                                            @php
+                                                echo $lessonActive->content;
+                                            @endphp
+                                        </div>
+                                    @endif
+                                    @foreach ($lessonActive->documents as $item)
+                                        <div class="item-document">
+                                            <span>{{$item->name}}</span>
+                                            <a href="{{asset('storage/documents/'.$item->name)}}" download title="Tải về"><i class="fa-solid fa-download"></i></a>
+                                        </div>
+                                    @endforeach
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
     <script>
@@ -110,7 +104,7 @@
                     type: 'POST',
                     data: { id: lessonId },
                     success: function(response) {
-                        const baseDocumentUrl = "{{asset('storage/lesson_files')}}/";
+                        const baseDocumentUrl = "{{asset('storage/documents')}}/";
                         let lessonContent = `<h4>${response.lesson.name}</h4>`;
                         if (response.lesson.content && response.lesson.content.trim() !== '') {
                             lessonContent += `

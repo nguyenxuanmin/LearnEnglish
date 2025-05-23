@@ -66,11 +66,12 @@ class UnitController extends Controller
         }
         $action = $request->action;
         $countLesson = $request->countLesson;
+        $idLessons = $request->input('idLesson');
         $nameLessons = $request->input('nameLesson');
         $contentLessons = $request->input('contentLesson');
         $statusLessons = $request->input('statusLesson');
         
-        if ($name == "") {
+        if (empty($name)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Tên unit không được để trống.'
@@ -78,7 +79,7 @@ class UnitController extends Controller
         }
 
         if(isset($request->course)){
-            $course_id = $request->course;
+            $courseId = $request->course;
         }else{
             return response()->json([
                 'success' => false,
@@ -87,9 +88,9 @@ class UnitController extends Controller
         }
 
         if($action == "edit"){
-            $checkEmpty = Unit::where('slug',$slug)->where('id','<>',$request->id)->where('course_id',$course_id)->first();
+            $checkEmpty = Unit::where('slug',$slug)->where('id','<>',$request->id)->where('course_id',$courseId)->first();
         }else{
-            $checkEmpty = Unit::where('slug',$slug)->where('course_id',$course_id)->first();
+            $checkEmpty = Unit::where('slug',$slug)->where('course_id',$courseId)->first();
         }
         if(isset($checkEmpty)){
             return response()->json([
@@ -114,23 +115,21 @@ class UnitController extends Controller
             }
             $fileLessonOlds = $request->input('fileLessonOld', []);
         }
-
+        
         if($action == "edit"){
             $unit = Unit::find($request->id);
-            $lessonRemoves = Lesson::Where('unit_id',$unit->id)->get();
-            foreach ($lessonRemoves as $key => $lessonRemove) {
-                $fileRemoves = Document::Where('lesson_id',$lessonRemove->id)->get();
-                foreach ($fileRemoves as $fileRemove) {
-                    $fileName = $fileRemove->name;
-                    if(isset($fileLessonOlds) && !in_array($fileName,$fileLessonOlds[$key+1])){
-                        $filePath = 'lesson_files/' . $fileName;
+            $lessons = Lesson::with('documents')->where('unit_id',$unit->id)->get();
+            foreach ($lessons as $key => $lesson) {
+                foreach ($lesson->documents as $documentRemove) {
+                    $fileName = $documentRemove->name;
+                    if((!empty($fileLessonOlds) && !in_array($fileName,$fileLessonOlds[$key+1])) || empty($fileLessonOlds)){
+                        $filePath = 'documents/' . $fileName;
                         if (Storage::disk('public')->exists($filePath)) {
                             Storage::disk('public')->delete($filePath);
                         }
                     }
-                    $fileRemove->delete();
+                    $documentRemove->delete();
                 }
-                $lessonRemove->delete();
             }
         }else{
             $unit = new Unit();
@@ -138,13 +137,17 @@ class UnitController extends Controller
         
         $unit->name = $name;
         $unit->slug = $slug;
-        $unit->course_id = $course_id;
+        $unit->course_id = $courseId;
         $unit->description = $description;
         $unit->status = $status;
         $unit->save();
 
         for ($i=0; $i < $countLesson; $i++) {
-            $lesson = new Lesson();
+            if (empty($idLessons[$i])) {
+                $lesson = new Lesson();
+            } else {
+                $lesson = Lesson::find($idLessons[$i]);
+            }
             $lesson->name = $nameLessons[$i];
             $lesson->slug = $this->adminService->generateSlug($nameLessons[$i]);
             $lesson->content = $contentLessons[$i];
@@ -156,7 +159,6 @@ class UnitController extends Controller
             $lesson->unit_id = $unit->id;
             $lesson->save();
             
-            $fileLessonOlds = $request->input('fileLessonOld', []);
             if (isset($fileLessonOlds[$i + 1])) {
                 foreach ($fileLessonOlds[$i + 1] as $fileLessonOld) {
                     $fileLesson = new Document();
@@ -173,7 +175,7 @@ class UnitController extends Controller
                         $typeFile = $file->getClientOriginalExtension();
                         $nameOnly = pathinfo($nameFile, PATHINFO_FILENAME);
                         $newNameFile = 'lesson_' . time() . '_' . $nameOnly . '.' . $typeFile;
-                        $path = $file->storeAs('lesson_files', $newNameFile, 'public');
+                        $path = $file->storeAs('documents', $newNameFile, 'public');
                         $fileLesson = new Document();
                         $fileLesson->name = $newNameFile;
                         $fileLesson->lesson_id = $lesson->id;
@@ -191,14 +193,13 @@ class UnitController extends Controller
 
     public function delete(Request $request){
         $unit = Unit::find($request->id);
-        $fileRemoves = Document::join('lessons', 'documents.lesson_id', '=', 'lessons.id')
-            ->where('lessons.unit_id', $request->id)
-            ->select('documents.name')
-            ->get();
-        foreach ($fileRemoves as $fileRemove) {
-            $filePath = 'lesson_files/' . $fileRemove->name;
-            if (Storage::disk('public')->exists($filePath)) {
-                Storage::disk('public')->delete($filePath);
+        $lessons = Lesson::with('documents')->where('unit_id',$unit->id)->get();
+        foreach ($lessons as $lesson) {
+            foreach ($lesson->documents as $document) {
+                $filePath = 'documents/' . $document->name;
+                if (Storage::disk('public')->exists($filePath)) {
+                    Storage::disk('public')->delete($filePath);
+                }
             }
         }
         $unit->delete();
