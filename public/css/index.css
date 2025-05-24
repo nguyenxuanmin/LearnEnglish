@@ -50,6 +50,7 @@ main{
     font-size: 20px;
     margin-bottom: 30px;
     text-align: center;
+    color: #506417;
 }
 #header.header-fixed{
     position: fixed;
@@ -554,8 +555,8 @@ main{
 .item-document a{
     color: #506417;
 }
-#lessonContent,
-#unitContent{
+.lesson-content,
+.unit-content{
     max-height: 500px;
     overflow-y: auto;
 }

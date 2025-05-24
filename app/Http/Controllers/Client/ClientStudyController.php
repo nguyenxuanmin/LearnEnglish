@@ -12,26 +12,32 @@ use App\Models\Lesson;
 class ClientStudyController extends Controller
 {
     public function show(){
-        $study = Progress::where('user_id',Auth::id())->firstOrFail();
-        $course = $study->course;
-        $units = $course->units()->with(['lessons.documents'])->orderBy('created_at', 'asc')->get();
-        if(isset($units)){
-            $unitActive = $units[0];
-        }else{
-            $unitActive = "";
+        $study = Progress::where('user_id',Auth::id())->first();
+        if (isset($study)) {
+            $course = $study->course;
+            $units = $course->units()->with(['lessons.documents'])->orderBy('created_at', 'asc')->get();
+            if(isset($units)){
+                $unitActive = $units[0];
+            }else{
+                $unitActive = "";
+            }
+            if(!empty($unitActive)){
+                $lessonActive = $unitActive->lessons[0];
+            }else{
+                $lessonActive = "";
+            }
+            return view('client.study',[
+                'study' => $study,
+                'course' => $course,
+                'units' => $units,
+                'unitActive' => $unitActive,
+                'lessonActive' => $lessonActive
+            ]);
+        } else {
+            return view('client.study',[
+                'study' => $study
+            ]);
         }
-        if(!empty($unitActive)){
-            $lessonActive = $unitActive->lessons[0];
-        }else{
-            $lessonActive = "";
-        }
-        return view('client.study',[
-            'study' => $study,
-            'course' => $course,
-            'units' => $units,
-            'unitActive' => $unitActive,
-            'lessonActive' => $lessonActive
-        ]);
     }
 
     public function getUnits(Request $request){
