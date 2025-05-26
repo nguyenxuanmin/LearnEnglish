@@ -6,8 +6,8 @@
                     <i class="fa-solid fa-location-dot"></i> {{$company[0]->address}}
                 </div>
                 <div class="top-header-right">
-                    <a href=""><i class="fa-solid fa-envelope"></i> {{$company[0]->email}}</a>
-                    <a href=""><i class="fa-solid fa-phone"></i> {{$company[0]->hotline}}</a>
+                    <a href="mailto:{{$company[0]->email}}"><i class="fa-solid fa-envelope"></i> {{$company[0]->email}}</a>
+                    <a href="tel:{{$company[0]->hotline}}"><i class="fa-solid fa-phone"></i> {{$company[0]->hotline}}</a>
                 </div>
             </div>
         </div>

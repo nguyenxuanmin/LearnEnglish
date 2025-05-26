@@ -112,6 +112,10 @@ class CourseController extends Controller
 
     public function delete(Request $request){
         $course = Course::find($request->id);
+        $imagePath = 'courses/'.$course->image;
+        if (Storage::disk('public')->exists($imagePath)) {
+            Storage::disk('public')->delete($imagePath);
+        }
         $course->delete();
         return response()->json([
             'success' => true

@@ -109,6 +109,7 @@ Route::group(['middleware' => [SystemAuth::class]], function () {
     Route::post('/', [ClientContactController::class, 'contact'])->name('contact');
     Route::get('/gioi-thieu', [ClientAboutController::class, 'show'])->name('client_about');
     Route::get('/khoa-hoc', [ClientCourseController::class, 'show'])->name('course');
+    Route::post('/khoa-hoc', [ClientCourseController::class, 'registerCourse'])->name('register_course');
     Route::get('/khoa-hoc/{slug}', [ClientCourseController::class, 'detail'])->name('course_detail');
     Route::get('/chia-se-kien-thuc', [ClientBlogController::class, 'show'])->name('blog');
     Route::get('/chia-se-kien-thuc/{slug}', [ClientBlogController::class, 'detail'])->name('blog_detail');
@@ -123,6 +124,7 @@ Route::group(['middleware' => [SystemAuth::class]], function () {
         Route::get('/khoa-hoc-dang-hoc', [ClientStudyController::class, 'show'])->name('study');
         Route::post('/get-unit', [ClientStudyController::class, 'getUnits'])->name('get_unit');
         Route::post('/get-lesson', [ClientStudyController::class, 'getLessons'])->name('get_lesson');
+        Route::post('/lesson', [ClientStudyController::class, 'lesson'])->name('lesson');
     });
 
     Route::group(['middleware' => [LoginClientAuth::class]], function () {

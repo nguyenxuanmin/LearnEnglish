@@ -95,7 +95,7 @@ class UserController extends Controller
             }
         }
 
-        if($phone != ""){
+        if(!empty($phone)){
             $messageError = $this->adminService->checkPhone($phone);
             if($messageError != ""){
                 return response()->json([

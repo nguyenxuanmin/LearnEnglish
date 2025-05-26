@@ -10,4 +10,9 @@ class Lesson extends Model
     {
         return $this->hasMany(Document::class);
     }
+
+    public function exercises()
+    {
+        return $this->hasMany(Exercise::class);
+    }
 }

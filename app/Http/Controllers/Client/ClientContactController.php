@@ -14,13 +14,13 @@ class ClientContactController extends Controller
         $name = trim($request->nameContact);
         $email = trim($request->emailContact);
         $content = trim($request->contentContact);
-        if($name == ''){
+        if(empty($name)){
             return response()->json([
                 'success' => false,
                 'message' => 'Vui lòng nhập họ và tên.'
             ]);
         }
-        if($email == ''){
+        if(empty($email)){
             return response()->json([
                 'success' => false,
                 'message' => 'Vui lòng nhập email.'
@@ -40,7 +40,7 @@ class ClientContactController extends Controller
                 ]);
             }
         }
-        if($content == ''){
+        if(empty($content)){
             return response()->json([
                 'success' => false,
                 'message' => 'Vui lòng nhập nội dung.'

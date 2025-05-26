@@ -43,7 +43,7 @@ class UnitController extends Controller
         $action = "edit";
         $unit = Unit::find($id);
         $courses = Course::where('status',1)->OrderBy('name','asc')->get();
-        $lessons = Lesson::With('documents')->Where('unit_id',$id)->OrderBy('name','asc')->get();
+        $lessons = Lesson::With('documents')->Where('unit_id',$id)->OrderBy('created_at','asc')->get();
         $sumLesson = count($lessons) + 1;
         return view('admin.unit.main',[
             'titlePage' => $titlePage,

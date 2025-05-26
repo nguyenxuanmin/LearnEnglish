@@ -40,7 +40,7 @@ class ClientUserController extends Controller
             $avatar = "";
         }
 
-        if($phone != ""){
+        if(!empty($phone)){
             $messageError = $this->adminService->checkPhone($phone);
             if($messageError != ""){
                 return response()->json([
@@ -52,7 +52,7 @@ class ClientUserController extends Controller
 
         $user = User::find($request->idUser);
 
-        if ($avatar != "") {
+        if (!empty($avatar)) {
             $imagePath = 'users/'.$user->avatar;
             if (Storage::disk('public')->exists($imagePath)) {
                 Storage::disk('public')->delete($imagePath);

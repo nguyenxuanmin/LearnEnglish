@@ -471,13 +471,24 @@ main{
     text-transform: uppercase;
 }
 .item-course-detail-fee{
+    position: relative;
     background: #f8f9f8;
-    padding: 7px 20px;
+    padding: 10px 20px;
     margin-bottom: 20px;
 }
 .item-course-detail-fee span{
     font-size: 22px;
     color: #90a94c;
+}
+.item-course-detail-fee a{
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+}
+#modalLesson,
+#modalCourse{
+    top: 25%;
 }
 .item-gallery-image{
     width: 100%;
@@ -559,6 +570,14 @@ main{
 .unit-content{
     max-height: 500px;
     overflow-y: auto;
+}
+#lessonContent{
+    position: relative;
+}
+.btnLesson{
+    position: absolute;
+    top: 0;
+    right: 0;
 }
 @media (min-width: 1025px) {
     .non-padding-left{
