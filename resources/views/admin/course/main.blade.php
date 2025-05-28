@@ -39,6 +39,14 @@
                                     <input type="text" class="form-control" name="fee" id="fee" value="@if (isset($course)){{number_format($course->fee, 0, ',', '.')}}@endif">
                                 </div>
                                 <div class="mb-3">
+                                    <label class="form-label">Thời gian học</label>
+                                    <select class="form-select" name="time">
+                                        @for ($i = 1; $i <= 12; $i++)
+                                            <option @if ((!isset($course) && $i == 1) || (isset($course) && $i == $course->time))selected @endif value="{{$i}}">{{$i}} tháng</option>
+                                        @endfor
+                                    </select>
+                                </div>
+                                <div class="mb-3">
                                     <label class="form-label">Ẩn/Hiện</label>
                                     <input type="checkbox" class="form-check-input" name="status" @if (!isset($course) || (isset($course) && $course->status == 1)) checked @endif>
                                 </div>

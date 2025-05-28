@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('email')->nullable();
             $table->text('content')->nullable();
+            $table->boolean('isRead')->default(0);
             $table->timestamps();
         });
     }

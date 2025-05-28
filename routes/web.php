@@ -20,6 +20,8 @@ use App\Http\Controllers\Admin\AboutController;
 use App\Http\Controllers\Admin\FeedbackController;
 use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\CompanyController;
+use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\RegisterCourseController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\ClientAuthController;
 use App\Http\Controllers\Client\ClientContactController;
@@ -29,6 +31,7 @@ use App\Http\Controllers\Client\ClientBlogController;
 use App\Http\Controllers\Client\ClientGalleryController;
 use App\Http\Controllers\Client\ClientUserController;
 use App\Http\Controllers\Client\ClientStudyController;
+use App\Http\Controllers\Client\ClientExerciseController;
 
 Route::group(['middleware' => [SystemAuth::class]], function () {
     Route::group(['middleware' => [AdminAuth::class]], function () {
@@ -99,6 +102,16 @@ Route::group(['middleware' => [SystemAuth::class]], function () {
         // Công ty
         Route::get('/company', [CompanyController::class, 'show'])->name('company');
         Route::post('/company/save', [CompanyController::class, 'save'])->name('save_company');
+        // Liên hệ
+        Route::get('/contact', [ContactController::class, 'index'])->name('list_contact');
+        Route::post('/contact/delete', [ContactController::class, 'delete'])->name('delete_contact');
+        Route::get('/contact/view/{id}', [ContactController::class, 'view'])->name('view_contact');
+        Route::get('/contact/search', [ContactController::class, 'search'])->name('search_contact');
+        // Liên hệ
+        Route::get('/register-course', [RegisterCourseController::class, 'index'])->name('list_register_course');
+        Route::post('/register-course/delete', [RegisterCourseController::class, 'delete'])->name('delete_register_course');
+        Route::get('/register-course/view/{id}', [RegisterCourseController::class, 'view'])->name('view_register_course');
+        Route::get('/register-course/search', [RegisterCourseController::class, 'search'])->name('search_register_course');
     });
     Route::group(['middleware' => [LoginAuth::class]], function () {
         Route::get('/admin/login', function () {return view('admin.login');})->name('login');
@@ -125,6 +138,9 @@ Route::group(['middleware' => [SystemAuth::class]], function () {
         Route::post('/get-unit', [ClientStudyController::class, 'getUnits'])->name('get_unit');
         Route::post('/get-lesson', [ClientStudyController::class, 'getLessons'])->name('get_lesson');
         Route::post('/lesson', [ClientStudyController::class, 'lesson'])->name('lesson');
+        Route::get('/lich-su-nop-bai-tap', [ClientExerciseController::class, 'show'])->name('history_exercise');
+        Route::post('/lich-su-nop-bai-tap', [ClientExerciseController::class, 'update'])->name('update_exercise');
+        Route::post('/xoa-lich-su-nop-bai-tap', [ClientExerciseController::class, 'delete'])->name('delete_exercise');
     });
 
     Route::group(['middleware' => [LoginClientAuth::class]], function () {

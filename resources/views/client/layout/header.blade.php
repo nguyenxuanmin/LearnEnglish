@@ -54,6 +54,7 @@
                                 <a href="{{route('info_user')}}">Thông tin tài khoản</a>
                                 <a href="{{route('change_password')}}">Thay đổi mật khẩu</a>
                                 <a href="{{route('study')}}">Khóa học đang học</a>
+                                <a href="{{route('history_exercise')}}">Lịch sử nộp bài tập</a>
                                 <a href="{{route('logout_client')}}">Đăng xuất</a>
                             @else
                                 <a href="{{route('login_client')}}">Đăng nhập</a>

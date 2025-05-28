@@ -76,6 +76,16 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="{{route('list_contact')}}" class="nav-link @if (strpos($currentUrl, 'contact') !== false) active @endif">
+                        <i class="fa-solid fa-comment"></i> <p>Liên hệ</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{route('list_register_course')}}" class="nav-link @if (strpos($currentUrl, 'register-course') !== false) active @endif">
+                        <i class="fa-solid fa-user-plus"></i> <p>Đăng ký khóa học</p>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="{{route('company')}}" class="nav-link @if (strpos($currentUrl, 'company') !== false) active @endif">
                         <i class="fa-solid fa-house"></i> <p>Thông tin công ty</p>
                     </a>

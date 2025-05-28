@@ -7,7 +7,7 @@
 @section('content')
     <section class="section-study">
         <div class="container">
-            @if (!isset($study) || (isset($study) && is_null($study->course_id)))
+            @if (!isset($study) || (isset($study) && is_null($study->course_id)) || (count($units) == 0))
                 <div class="title-index">
                     <span>Khóa học đang học</span>
                 </div>
@@ -29,7 +29,7 @@
                                     @if (!empty($unitActive))
                                         <div class="unit-content-title">{{$unitActive->name}}</div>
                                         <div class="unit-content">
-                                            @foreach ($unitActive->lessons as $item)
+                                            @foreach ($lessons as $item)
                                                 <div class="item-lesson @if (!empty($lessonActive) && $lessonActive->id == $item->id) active @endif" data-id="{{$item->id}}">{{$item->name}}</div>
                                             @endforeach
                                         </div>
@@ -44,8 +44,9 @@
                                 <div id="lessonContent">
                                     @if (!empty($lessonActive))
                                         <h4>{{$lessonActive->name}}</h4>
-                                        @if (count($lessonActive->documents))
-                                            <a class="btn btn-info btnLesson" data-bs-toggle="modal" data-bs-target="#modalLesson">Nộp bài học</a>
+                                        @if (count($lessonActive->isNotKeyDocuments))
+                                            <a class="btn btn-lesson" data-bs-toggle="modal" data-bs-target="#modalLesson">Nộp bài tập</a>
+                                            <p>Hạn cuối nộp bài tập: {{$lessonActive->time->format('d-m-Y')}}</p>
                                         @endif
                                         <div class="lesson-content">
                                             @if (!empty($lessonActive->content))
@@ -56,7 +57,7 @@
                                                 </div>
                                             @endif
                                             <div class="title-detail"><i class="fa-solid fa-file"></i> Tài liệu và bài tập:</div>
-                                            @foreach ($lessonActive->documents as $item)
+                                            @foreach ($lessonActive->isNotKeyDocuments as $item)
                                                 <div class="item-document">
                                                     <span>{{$item->name}}</span>
                                                     <a href="{{asset('storage/documents/'.$item->name)}}" download title="Tải về"><i class="fa-solid fa-download"></i></a>
@@ -64,7 +65,6 @@
                                             @endforeach
                                         </div>
                                         <input type="hidden" id="lessonId" name="lessonId" value="{{$lessonActive->id}}">
-                                        <input type="hidden" id="countExercise" name="countExercise" value="{{count($lessonActive->exercises)}}">
                                     @endif
                                 </div>
                             </div>
@@ -77,29 +77,26 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Nộp bài học</h5>
+                        <h5 class="modal-title">Nộp bài tập</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form id="formLesson" enctype="multipart/form-data">
                             <div class="row">
-                                @if (isset($study) && !is_null($study->course_id) && isset($lessonActive))
-                                    <div class="col-12 mb-3">
-                                        Bạn đã nộp <span id="showCountExercise">{{count($lessonActive->exercises)}}</span> bài tập cho bài học này.
-                                        <a class="link-history" href="">Lịch sử nộp bài tập</a>
-                                    </div>
-                                @endif
+                                <div class="col-12 mb-3">
+                                    <a class="link-history" href="{{route('history_exercise')}}"><b>Lịch sử nộp bài tập</b></a>
+                                </div>
                                 <div class="col-12 mb-3">
                                     <label class="form-label">Nội dung</label>
                                     <textarea class="form-control" name="contentLesson" rows="4"></textarea>
                                 </div>
                                 <div class="col-12 mb-3">
-                                    <label class="form-label">File bài học</label>
+                                    <label class="form-label">File bài tập</label>
                                     <input id="fileLesson" class="form-control" name="fileLesson[]" type="file" multiple accept=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx,.xls,.xlsx" onchange="handleFileSelect(this)">
                                     <div id="preview" class="file-preview"></div>
                                 </div>
                                 <div class="col-12 mb-3 text-center">
-                                    <button id="btnLesson" class="btn btn-primary">Nộp bài học</button>
+                                    <button id="btnLesson" class="btn btn-submit-lesson">Nộp bài tập</button>
                                 </div>
                             </div>
                         </form>
@@ -174,7 +171,10 @@
                             const baseDocumentUrl = "{{asset('storage/documents')}}/";
                             let lessonContent = `<h4>${response.lesson.name}</h4>`;
                             if(response.documents.length > 0){
-                                lessonContent += `<a class="btn btn-info btnLesson" data-bs-toggle="modal" data-bs-target="#modalLesson">Nộp bài học</a>`;
+                                lessonContent += `
+                                    <a class="btn btn-lesson" data-bs-toggle="modal" data-bs-target="#modalLesson">Nộp bài tập</a>
+                                    <p>Hạn cuối nộp bài tập: ${response.deadline}</p>
+                                `;
                             }
                             lessonContent += `<div class="lesson-content">`;
                                 if (response.lesson.content && response.lesson.content.trim() !== '') {
@@ -196,10 +196,8 @@
                             lessonContent += `</div>`;
                             lessonContent += `
                                 <input type="hidden" id="lessonId" name="lessonId" value="${response.lesson.id}">
-                                <input type="hidden" id="countExercise" name="countExercise" value="${response.exercises.length}">
                             `;
                             $('#lessonContent').html(lessonContent);
-                            $('#showCountExercise').html(document.getElementById('countExercise').value);
                         },
                         error: function(xhr) {
                             console.log(xhr);
@@ -278,12 +276,12 @@
                     success: function(response) {
                         if(response.success == true){
                             Swal.fire({
-                                text: "Bạn đã nộp bài học thành công!",
+                                text: "Bạn đã nộp bài tập thành công!",
                                 icon: "success",
                                 showConfirmButton: false,
                                 timer: 2000
                             }).then((result) => {
-                                location.href = '{{route('index')}}';
+                                location.href = '{{route('history_exercise')}}';
                             });
                         }else{
                             Swal.fire({
@@ -294,7 +292,7 @@
                             });
                         }
                         btn.disabled = false;
-                        btn.innerText = 'Nộp bài học';
+                        btn.innerText = 'Nộp bài tập';
                     },
                     error: function(xhr) {
                         console.log(xhr);

@@ -11,10 +11,11 @@
             <h2 class="item-course-detail-title">{{$titlePage}}</h2>
             <div class="item-course-detail-fee">
                 <b>Học phí:</b>  <span>{{number_format($course->fee, 0, ',', '.')}} VND</span>
-                <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalCourse">Đăng ký học</a>
+                <a class="btn btn-course" data-bs-toggle="modal" data-bs-target="#modalCourse">Đăng ký học</a>
             </div>
             <div class="title-detail"><i class="fa-regular fa-bookmark"></i> Chi tiết khóa học</div>
             <div class="item-course-detail-content clearfix">
+                <p>Thời gian học: {{$course->time}} tháng</p>
                 @php echo $course->content; @endphp
             </div>
         </div>
@@ -72,7 +73,7 @@
                                 </div>
                             </div>
                             <div class="col-12 mb-3 text-center">
-                                <button id="btnCourse" class="btn btn-primary">Đăng ký</button>
+                                <button id="btnCourse" class="btn btn-submit-course">Đăng ký</button>
                             </div>
                         </div>
                     </form>

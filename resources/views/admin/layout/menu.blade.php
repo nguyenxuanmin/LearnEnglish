@@ -6,21 +6,6 @@
             </li>
         </ul>
         <ul class="navbar-nav ms-auto">
-            <li class="nav-item dropdown">
-                <a class="nav-link" data-bs-toggle="dropdown" href="#">
-                    <i class="bi bi-bell-fill"></i> <span class="navbar-badge badge text-bg-warning">1</span>
-                </a>
-                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-                    <span class="dropdown-item dropdown-header">Có 1 liên hệ chưa đọc</span>
-                    <div class="dropdown-divider"></div>
-                    <a href="#" class="dropdown-item">
-                        <i class="bi bi-envelope me-2"></i> aaa
-                        <span class="float-end text-secondary fs-7">3h</span>
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <a href="#" class="dropdown-item dropdown-footer"> Xem tất cả liên hệ </a>
-                </div>
-            </li>
             <li class="nav-item">
                 <a class="nav-link" href="#" data-lte-toggle="fullscreen">
                     <i data-lte-icon="maximize" class="bi bi-arrows-fullscreen"></i>
@@ -29,12 +14,12 @@
             </li>
             <li class="nav-item dropdown user-menu">
                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                    <img src="{{asset('library/admin/user-01.png')}}" class="user-image rounded-circle shadow" alt="{{Auth::User()->name}}"/>
+                    <img src="@if(!empty(Auth::User()->avatar)){{asset('storage/users/'.Auth::User()->avatar)}}@else{{asset('library/admin/user-01.png')}}@endif" class="user-image rounded-circle shadow" alt="{{Auth::User()->name}}"/>
                     <span class="d-none d-md-inline">{{Auth::User()->name}}</span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                     <li class="user-header text-bg-primary">
-                        <img src="{{asset('library/admin/user-01.png')}}" class="rounded-circle shadow" alt="{{Auth::User()->name}}"/>
+                        <img src="@if(!empty(Auth::User()->avatar)){{asset('storage/users/'.Auth::User()->avatar)}}@else{{asset('library/admin/user-01.png')}}@endif" class="rounded-circle shadow" alt="{{Auth::User()->name}}"/>
                         <p>{{Auth::User()->name}}</p>
                     </li>
                     <li class="user-footer">

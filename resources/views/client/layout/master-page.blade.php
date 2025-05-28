@@ -1,7 +1,7 @@
 @php
     $company = DB::select("SELECT * FROM companies");
     $currentUrl = $_SERVER['REQUEST_URI'];
-    $listUrl = ["thong-tin-tai-khoan","thay-doi-mat-khau","khoa-hoc-dang-hoc"];
+    $listUrl = ["thong-tin-tai-khoan","thay-doi-mat-khau","khoa-hoc-dang-hoc","lich-su-nop-bai-tap"];
     $isFoundUrl = false;
     foreach ($listUrl as $item) {
         if (strpos($currentUrl, $item) !== false) {

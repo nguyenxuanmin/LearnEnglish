@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name')->nullable();
             $table->foreignId('lesson_id')->constrained()->onDelete('cascade');
+            $table->boolean('isKey')->default(0);
             $table->timestamps();
         });
     }

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('content')->nullable();
             $table->boolean('status')->default(1);
             $table->foreignId('unit_id')->constrained()->onDelete('cascade');
+            $table->timestamp('time')->nullable();
             $table->timestamps();
         });
     }

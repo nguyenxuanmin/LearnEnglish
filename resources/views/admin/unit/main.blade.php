@@ -81,23 +81,26 @@
                                                                     <textarea name="contentLesson[]" class="contentLesson">{{$lesson->content}}</textarea>
                                                                 </div>
                                                                 <div class="mb-3">
+                                                                    <label class="form-label">Thời gian nộp bài tập</label>
+                                                                    <input type="date" class="form-control" name="timeLesson[]" value="{{$lesson->time->format('Y-m-d')}}">
+                                                                </div>
+                                                                <div class="mb-3">
                                                                     <label class="form-label">Ẩn/Hiện</label>
                                                                     <input type="checkbox" class="form-check-input" name="statusLesson[]" @if ($lesson->status == 1) checked @endif>
                                                                 </div>
                                                                 <div class="mb-3">
-                                                                    <label class="form-label">File đính kèm</label>
+                                                                    <label class="form-label">File tài liệu, bài tập và key <span class="text-danger">(Nếu file là key thì chọn)</span></label>
                                                                     <input class="form-control" name="fileLesson{{$key + 1}}[]" type="file" multiple accept=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx,.xls,.xlsx" onchange="handleFileSelect(this, {{$key + 1}})">
-                                                                    @foreach ($lesson->documents as $item)
+                                                                    @foreach ($lesson->documents as $k => $item)
                                                                         <div class="d-flex align-items-center justify-content-between mt-2 file-old">
                                                                             <div style="width: 85%; word-break: break-all;">{{$item->name}}</div>
+                                                                            <input type="checkbox" class="form-check-input" name="key_{{$key + 1}}_{{$k}}" @if($item->isKey == 1) checked @endif title="Key">
                                                                             <button type="button" class="btn btn-danger btn-sm" onclick="removeFile(this)">Xóa file</button>
                                                                         </div>
                                                                         <input type="hidden" name="fileLessonOld[{{$key + 1}}][]" value="{{$item->name}}" class="file-hidden">
                                                                     @endforeach
                                                                     <div id="preview{{$key + 1}}" class="file-preview"></div>
-                                                                </div>
-                                                                <div class="text-end">
-                                                                    <button type="button" class="btn btn-danger" onclick="removeLesson(this)">Xóa bài học</button>
+                                                                    <input type="hidden" id="countDocuments{{$key + 1}}" value="{{count($lesson->documents)}}">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -123,6 +126,9 @@
     </div>
     <script>
         let lessonCount = {{$sumLesson}};
+        const today = new Date();
+        today.setDate(today.getDate() + 3);
+        const valueDate = today.toISOString().split('T')[0];
 
         function addLesson() {
             const uniqueId = lessonCount++;
@@ -147,16 +153,18 @@
                                 <textarea name="contentLesson[]" class="contentLesson"></textarea>
                             </div>
                             <div class="mb-3">
+                                <label class="form-label">Thời gian nộp bài tập</label>
+                                <input type="date" class="form-control" name="timeLesson[]" value="${valueDate}">
+                            </div>
+                            <div class="mb-3">
                                 <label class="form-label">Ẩn/Hiện</label>
                                 <input type="checkbox" class="form-check-input" name="statusLesson[]" checked>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">File đính kèm</label>
+                                <label class="form-label">File tài liệu, bài tập và key <span class="text-danger">(Nếu file là key thì chọn)</span></label>
                                 <input class="form-control" name="fileLesson${lessonIndex}[]" type="file" multiple accept=".webp,.jpg,.jpeg,.png,.gif,.pdf,.doc,.docx,.xls,.xlsx" onchange="handleFileSelect(this, ${lessonIndex})">
                                 <div id="preview${lessonIndex}" class="file-preview"></div>
-                            </div>
-                            <div class="text-end">
-                                <button type="button" class="btn btn-danger" onclick="removeLesson(this)">Xóa bài học</button>
+                                <input type="hidden" id="countDocuments${lessonIndex}" value="0">
                             </div>
                         </div>
                     </div>
@@ -169,12 +177,6 @@
                 height: 200
             });
             toastr.success('Đã thêm bài học!');
-            renumberLessons();
-        }
-
-        function removeLesson(btn) {
-            $(btn).closest('.accordion-item').remove();
-            toastr.error('Đã xóa bài học!');
             renumberLessons();
         }
 
@@ -213,14 +215,21 @@
 
         function renderFileList(lessonIndex) {
             const preview = document.getElementById('preview' + lessonIndex);
+            let valueCountDocuments = document.getElementById('countDocuments' + lessonIndex).value;
             preview.innerHTML = '';
             selectedFiles[lessonIndex].forEach((file, index) => {
+                let countDocuments = Number(valueCountDocuments) + index;
                 const div = document.createElement('div');
                 div.className = 'd-flex align-items-center justify-content-between mt-2';
                 const div2 = document.createElement('div');
                 div2.style.width = '85%';
                 div2.style.wordBreak = 'break-all';
                 div2.textContent = `${file.name}`;
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.className = 'form-check-input';
+                checkbox.name = `key_${lessonIndex}_${countDocuments}`;
+                checkbox.title = "Key";
                 const btn = document.createElement('button');
                 btn.textContent = `Xóa file`;
                 btn.type = 'button';
@@ -230,6 +239,7 @@
                     renderFileList(lessonIndex);
                 };
                 div.appendChild(div2);
+                div.appendChild(checkbox);
                 div.appendChild(btn);
                 preview.appendChild(div);
             });
@@ -237,7 +247,8 @@
         }
 
         function updateInputFiles(lessonIndex) {
-            const input = document.querySelectorAll('input[type="file"]')[lessonIndex];
+            nameInput = `fileLesson${lessonIndex}[]`
+            const input = document.getElementsByName(nameInput);
             const dataTransfer = new DataTransfer();
             selectedFiles[lessonIndex].forEach(file => {
                 dataTransfer.items.add(file);

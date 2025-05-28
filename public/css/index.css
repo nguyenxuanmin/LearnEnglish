@@ -231,6 +231,7 @@ main{
 .my-slider .slick-arrow{
     top: 50%;
 }
+.section-exercise,
 .section-study,
 .section-change-password,
 .section-user,
@@ -377,10 +378,18 @@ main{
     font-weight: 700;
     margin-bottom: 30px;
 }
+.btn-course,
+.btn-submit-course,
+.btn-lesson,
+.btn-submit-lesson,
 .btn-submit-contact{
     background-color: #90a94c;
     color: #fff;
 }
+.btn-course:hover,
+.btn-submit-course:hover,
+.btn-lesson:hover,
+.btn-submit-lesson:hover,
 .btn-submit-contact:hover{
     background-color: #506417;
     color: #fff;
@@ -563,6 +572,8 @@ main{
     margin-bottom: 10px;
     font-size: 16px;
 }
+.file-old a,
+.link-history,
 .item-document a{
     color: #506417;
 }
@@ -574,10 +585,40 @@ main{
 #lessonContent{
     position: relative;
 }
-.btnLesson{
+.btn-lesson{
     position: absolute;
     top: 0;
     right: 0;
+}
+.item-exercise{
+    margin-bottom: 10px;
+}
+.item-exercise-header{
+    position: relative;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 10px 15px;
+    margin-bottom: 5px;
+    background: #f8f9f8;
+    color: #506417;
+    border-radius: 5px;
+    font-weight: 700;
+}
+.toggle-icon{
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.file-old{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+.file-old span{
+    width: 85%;
+    word-break: break-all;
 }
 @media (min-width: 1025px) {
     .non-padding-left{
@@ -603,6 +644,7 @@ main{
     .item-nav{
         display: none;
     }
+    .section-exercise,
     .section-study,
     .section-change-password,
     .section-user,

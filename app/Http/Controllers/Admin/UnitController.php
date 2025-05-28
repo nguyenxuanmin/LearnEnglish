@@ -70,6 +70,7 @@ class UnitController extends Controller
         $nameLessons = $request->input('nameLesson');
         $contentLessons = $request->input('contentLesson');
         $statusLessons = $request->input('statusLesson');
+        $time = $request->input('timeLesson');
         
         if (empty($name)) {
             return response()->json([
@@ -157,19 +158,27 @@ class UnitController extends Controller
                 $lesson->status = 0;
             }
             $lesson->unit_id = $unit->id;
+            $lesson->time = $time[$i];
             $lesson->save();
             
             if (isset($fileLessonOlds[$i + 1])) {
-                foreach ($fileLessonOlds[$i + 1] as $fileLessonOld) {
+                foreach ($fileLessonOlds[$i + 1] as $k => $fileLessonOld) {
                     $fileLesson = new Document();
                     $fileLesson->name = $fileLessonOld;
                     $fileLesson->lesson_id = $lesson->id;
+                    $isKey = $request->input('key_'.($i + 1).'_'.$k);
+                    if (isset($isKey)) {
+                        $key = 1;
+                    } else {
+                        $key = 0;
+                    }
+                    $fileLesson->isKey = $key;
                     $fileLesson->save();
                 }
             }
 
             if ($request->hasFile('fileLesson'.$i+1)) {
-                foreach ($request->file('fileLesson'.$i+1) as $file) {
+                foreach ($request->file('fileLesson'.$i+1) as $k => $file) {
                     if ($file->isValid()) {
                         $nameFile = $file->getClientOriginalName();
                         $typeFile = $file->getClientOriginalExtension();
@@ -179,6 +188,13 @@ class UnitController extends Controller
                         $fileLesson = new Document();
                         $fileLesson->name = $newNameFile;
                         $fileLesson->lesson_id = $lesson->id;
+                        $isKey = $request->input('key_'.($i + 1).'_'.$k);
+                        if (isset($isKey)) {
+                            $key = 1;
+                        } else {
+                            $key = 0;
+                        }
+                        $fileLesson->isKey = $key;
                         $fileLesson->save();
                     }
                 }

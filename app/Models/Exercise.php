@@ -6,5 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Exercise extends Model
 {
-    //
+    public function lesson()
+    {
+        return $this->belongsTo(Lesson::class);
+    }
+
+    public function exerciseDocuments()
+    {
+        return $this->hasMany(ExerciseDocument::class);
+    }
 }

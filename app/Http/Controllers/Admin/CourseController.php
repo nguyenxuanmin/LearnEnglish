@@ -59,8 +59,9 @@ class CourseController extends Controller
             $image = "";
         }
         $action = $request->action;
+        $time = $request->time;
 
-        if ($name == "") {
+        if (empty($name)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Tên khóa học không được để trống.'
@@ -73,7 +74,7 @@ class CourseController extends Controller
             $course = new Course();
         }
 
-        if ($image != "") {
+        if (!empty($image)) {
             if($action == "edit"){
                 $imagePath = 'courses/'.$course->image;
                 if (Storage::disk('public')->exists($imagePath)) {
@@ -102,6 +103,7 @@ class CourseController extends Controller
         $course->status = $status;
         $course->content = $content;
         $course->image = $image;
+        $course->time = $time;
         $course->save();
 
         return response()->json([

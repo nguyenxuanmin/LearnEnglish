@@ -19,24 +19,24 @@ class ClientStudyController extends Controller
         if (isset($study) && !is_null($study->course_id)) {
             $course = $study->course;
             $units = $course->units()->with(['lessons.documents'])->where('status',1)->orderBy('created_at', 'asc')->get();
-            if(isset($units)){
+            if(count($units)){
                 $unitActive = $units[0];
-            }else{
-                $unitActive = "";
-            }
-            if(!empty($unitActive)){
-                $lessons = $unitActive->lessons()->with('documents')->where('status',1)->orderBy('created_at', 'desc')->get();
+                $lessons = $unitActive->lessons()->with('documents')->where('status',1)->orderBy('id', 'desc')->get();
                 $lessonActive = $lessons[0];
+                return view('client.study',[
+                    'study' => $study,
+                    'course' => $course,
+                    'units' => $units,
+                    'lessons' => $lessons,
+                    'unitActive' => $unitActive,
+                    'lessonActive' => $lessonActive
+                ]);
             }else{
-                $lessonActive = "";
+                return view('client.study',[
+                    'study' => $study,
+                    'units' => $units
+                ]);
             }
-            return view('client.study',[
-                'study' => $study,
-                'course' => $course,
-                'units' => $units,
-                'unitActive' => $unitActive,
-                'lessonActive' => $lessonActive
-            ]);
         } else {
             return view('client.study',[
                 'study' => $study
@@ -57,26 +57,36 @@ class ClientStudyController extends Controller
         $lesson = Lesson::where('id',$request->id)->first();
         return response()->json([
             'lesson' => $lesson,
-            'documents' => $lesson->documents,
-            'exercises' => $lesson->exercises
+            'deadline' => $lesson->time->format('d-m-Y'),
+            'documents' => $lesson->isNotKeyDocuments
         ]);
     }
     
     public function lesson(Request $request){
         $id = $request->lessonId;
         $content = $request->contentLesson;
-        $exerciseConfirm = Exercise::where('lesson_id',$id)->where('user_id',Auth::id())->where('isConfirm',1)->first();
-        if (isset($exerciseConfirm)) {
+
+        $exerciseExist = Exercise::where('lesson_id',$id)->where('user_id',Auth::id())->first();
+        if (isset($exerciseExist)) {
             return response()->json([
                 'success' => false,
-                'message' => 'Bài tập bạn nộp đã được xác nhận, không thể nộp nữa.'
+                'message' => 'Bạn đã nộp bài tập này rồi, không thể nộp bài tập.'
+            ]);
+        }
+
+        $lesson = Lesson::find($id);
+        $deadline = $lesson->time->copy()->addDays(2);
+        if ($deadline->lt(now())) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Đã quá thời gian nộp bài tập, không thể nộp bài tập.'
             ]);
         }
 
         if (!$request->hasFile('fileLesson')) {
             return response()->json([
                 'success' => false,
-                'message' => 'Vui lòng chọn tối thiếu 1 file bài học.'
+                'message' => 'Vui lòng chọn tối thiếu 1 file bài tập.'
             ]);
         }else{
             $exercise = new Exercise();

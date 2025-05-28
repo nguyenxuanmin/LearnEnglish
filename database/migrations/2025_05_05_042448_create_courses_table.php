@@ -20,6 +20,7 @@ return new class extends Migration
             $table->text('content')->nullable();
             $table->text('image')->nullable();
             $table->boolean('status')->default(1);
+            $table->string('time')->nullable();
             $table->timestamps();
         });
     }
