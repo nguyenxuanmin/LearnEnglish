@@ -8,6 +8,9 @@ use App\Models\User;
 use App\Services\AdminService;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
+use App\Mail\UserMail;
+use App\Mail\UpdatePasswordMail;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
@@ -20,7 +23,8 @@ class UserController extends Controller
     public function index(){
         $users = User::Where('access_right',0)->OrderBy('name','asc')->paginate(20);
         return view('admin.user.list',[
-            'users' => $users
+            'users' => $users,
+            'infoSearch' => ''
         ]);
     }
 
@@ -135,6 +139,17 @@ class UserController extends Controller
             }
         }
 
+        if ($status == 1 && ($action == "add" || ($action == "edit" && empty($user->email_verified_at)))) {
+            $details = [
+                'name' => $name,
+                'email' => $email,
+                'password' => '123456',
+                'url' => route('index')
+            ];
+            Mail::to($email)->send(new UserMail($details));
+            $user->email_verified_at = now();
+        }
+
         $user->name = $name;
         $user->email = $email;
         $user->phone = $phone;
@@ -178,6 +193,12 @@ class UserController extends Controller
 
     public function updatePassword(Request $request){
         $user = User::find($request->id);
+        $details = [
+            'name' => $user->name,
+            'password' => '123456',
+            'url' => route('index')
+        ];
+        Mail::to($user->email)->send(new UpdatePasswordMail($details));
         $user->password = Hash::make('123456');
         $user->save();
         return response()->json([

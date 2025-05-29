@@ -18,7 +18,8 @@ class BlogController extends Controller
     public function index(){
         $blogs = Blog::OrderBy('created_at','desc')->paginate(20);
         return view('admin.blog.list',[
-            'blogs' => $blogs
+            'blogs' => $blogs,
+            'infoSearch' => ''
         ]);
     }
 
@@ -136,7 +137,7 @@ class BlogController extends Controller
     public function search(Request $request){
         $infoSearch = $request->search;
         $blogs = Blog::where('name','LIKE','%'.$infoSearch.'%')->orderBy('created_at','desc')->paginate(20);
-        return view('admin.slider.list',[
+        return view('admin.blog.list',[
             'infoSearch' => $infoSearch,
             'blogs' => $blogs
         ]);

@@ -29,8 +29,8 @@ class ClientExerciseController extends Controller
             ]);
         }else{
             $exercise = Exercise::find($id);
-            $deadline = $exercise->lesson->time->copy()->addDays(2);
-            if ($deadline->lt(now())) {
+            $deadline = $exercise->lesson->time->copy()->addDays(1);
+            if ($deadline->lt(now()->startOfDay())) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Đã quá thời gian nộp bài tập, không thể sửa.'
@@ -87,34 +87,5 @@ class ClientExerciseController extends Controller
                 'message' => ''
             ]);
         }
-    }
-
-    public function delete(Request $request){
-        $exercise = Exercise::find($request->id);
-        $deadline = $exercise->lesson->time->copy()->addDays(2);
-        if ($deadline->lt(now())) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Đã quá thời gian nộp bài tập, không thể xóa.'
-            ]);
-        }
-        if($exercise->isConfirm == 1){
-            return response()->json([
-                'success' => false,
-                'message' => 'Bài tập đã được xác nhận, không thể xóa.'
-            ]);
-        }
-
-        foreach ($exercise->exerciseDocuments as $exerciseDocument) {
-            $imagePath = 'exercise_documents/'.$exerciseDocument->name;
-            if (Storage::disk('public')->exists($imagePath)) {
-                Storage::disk('public')->delete($imagePath);
-            }
-        }
-        $exercise->delete();
-
-        return response()->json([
-            'success' => true
-        ]);
     }
 }

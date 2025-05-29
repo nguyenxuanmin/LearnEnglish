@@ -12,7 +12,7 @@
                     <div class="small-box text-bg-primary">
                         <div class="inner">
                             <h3>{{$countUser}}</h3>
-                            <p>Học viên</p>
+                            <p>Học viên đang học</p>
                         </div>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="small-box-icon" viewBox="0 0 18 18">
                             <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
@@ -57,7 +57,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-12 col-lg-6 mb-3">
+                <div class="col-12 col-lg-6">
                     <div class="card direct-chat direct-chat-primary mb-4">
                         <div class="card-header">
                             <h3 class="card-title">Danh sách liên hệ chưa đọc</h3>
@@ -76,14 +76,16 @@
                                         <thead>
                                             <tr>
                                                 <th>Tên người liên hệ</th>
-                                                <th style="width:120px; text-align:right;">Ngày liên hệ</th>
+                                                <th style="width:120px; text-align:center;">Ngày liên hệ</th>
+                                                <th style="width:100px; text-align:right;">Xem chi tiết</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($contacts as $item)
                                                 <tr class="align-middle">
-                                                    <td><a title="Xem" style="text-decoration: none; color:#000;" href="{{route('view_contact',$item->id)}}">{{$item->name}}</a></td>
-                                                    <td style="text-align: right;">{{$item->created_at->format('d/m/Y')}}</td>
+                                                    <td>{{$item->name}}</td>
+                                                    <td style="text-align: center;">{{$item->created_at->format('d/m/Y')}}</td>
+                                                    <td style="text-align: right;"><a title="Xem" style="text-decoration: none; color:darkcyan;" href="{{route('view_contact',$item->id)}}"><i class="fa-solid fa-eye"></i></a></td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -93,7 +95,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-lg-6 mb-3">
+                <div class="col-12 col-lg-6">
                     <div class="card direct-chat direct-chat-primary mb-4">
                         <div class="card-header">
                             <h3 class="card-title">Danh sách đăng ký khóa học chưa đọc</h3>
@@ -112,16 +114,18 @@
                                         <thead>
                                             <tr>
                                                 <th>Tên người đăng ký</th>
-                                                <th>Khóa học</th>
-                                                <th style="width:120px; text-align:right;">Ngày đăng ký</th>
+                                                <th style="width:200px;">Khóa học</th>
+                                                <th style="width:120px; text-align:center;">Ngày đăng ký</th>
+                                                <th style="width:100px; text-align:right;">Xem chi tiết</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($registerCourses as $item)
                                                 <tr class="align-middle">
-                                                    <td><a title="Xem" style="text-decoration: none; color:#000;" href="{{route('view_register_course',$item->id)}}">{{$item->name}}</a></td>
+                                                    <td>{{$item->name}}</td>
                                                     <td>{{$item->course->name}}</td>
-                                                    <td style="text-align: right;">{{$item->created_at->format('d/m/Y')}}</td>
+                                                    <td style="text-align: center;">{{$item->created_at->format('d/m/Y')}}</td>
+                                                    <td style="text-align: right;"><a title="Xem" style="text-decoration: none; color:darkcyan;" href="{{route('view_register_course',$item->id)}}"><i class="fa-solid fa-eye"></i></a></td>
                                                 </tr>
                                             @endforeach
                                         </tbody>

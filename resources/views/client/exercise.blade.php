@@ -42,7 +42,6 @@
                                 @if ($exercise->isConfirm == 0)
                                     <div class="col-12 mb-3 text-end">
                                         <button id="btnEditExercise" class="btn btn-submit-lesson">Chỉnh sửa</button>
-                                        <a href="javascript:void(0)" onclick="deleteExercise({{$exercise->id}})" class="btn btn-danger">Xóa</a>
                                     </div>
                                 @endif
                                 <input type="hidden" name="exerciseId" value="{{$exercise->id}}">
@@ -170,50 +169,6 @@
                         console.log(xhr);
                     }
                 });
-            });
-        }
-
-        function deleteExercise(id){
-            Swal.fire({
-                text: 'Bạn có muốn xóa bài tập này?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Xóa',
-                cancelButtonText: 'Huỷ bỏ'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    var csrfToken = $('meta[name="csrf-token"]').attr('content');
-                    $.ajax({
-                        url: '{{route('delete_exercise')}}',
-                        headers: {
-                            'X-CSRF-TOKEN': csrfToken
-                        },
-                        type: 'POST',
-                        data: {id: id},
-                        success: function(response) {
-                            if(response.success == true){
-                                Swal.fire({
-                                    text: "Xóa thành công!",
-                                    icon: "success",
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                }).then((result) => {
-                                    location.reload();
-                                });
-                            }else{
-                                Swal.fire({
-                                    text: response.message,
-                                    icon: "error",
-                                    showConfirmButton: false,
-                                    timer: 2500
-                                });
-                            }
-                        },
-                        error: function(xhr) {
-                            console.log(xhr);
-                        }
-                    });
-                }
             });
         }
     </script>

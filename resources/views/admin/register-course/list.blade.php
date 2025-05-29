@@ -24,7 +24,7 @@
                 <div class="col-12 col-md-4 mb-3">
                     <form action="{{route('search_register_course')}}">
                         <div class="input-group">
-                            <input type="search" name="search" class="form-control form-control" placeholder="Tìm kiếm" value="@if (isset($infoSearch)){{$infoSearch}}@endif">
+                            <input type="search" name="search" class="form-control form-control" placeholder="Tìm kiếm" value="{{$infoSearch}}">
                             <div class="input-group-append">
                                 <button type="submit" class="btn btn-outline-dark">
                                     <i class="fa fa-search"></i>
@@ -61,9 +61,9 @@
                             <td valign="middle">{{$registerCourse->course->name}}</td>
                             <td valign="middle" align="center">
                                 @if ($registerCourse->isRead == 1)
-                                    <b><span class="text-success">Đã đọc</span></b>
+                                    <span class="badge text-bg-success">Đã đọc</span>
                                 @else
-                                    <b><span class="text-primary">Chưa đọc</span></b>
+                                    <span class="badge text-bg-info">Chưa đọc</span>
                                 @endif
                             </td>
                             <td valign="middle" align="center">{{$registerCourse->created_at->format('d/m/Y');}}</td>
@@ -75,7 +75,7 @@
                     @endforeach
                 </tbody>
             </table>
-            {{$registerCourses->links('admin.layout.pagination')}}
+            {{$registerCourses->appends(['search' => $infoSearch])->links('admin.layout.pagination')}}
         </div>
     </div>
 @endsection

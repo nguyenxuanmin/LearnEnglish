@@ -9,9 +9,10 @@ use App\Models\RegisterCourse;
 class RegisterCourseController extends Controller
 {
     public function index(){
-        $registerCourses = RegisterCourse::OrderBy('created_at','desc')->paginate(20);
+        $registerCourses = RegisterCourse::with('course')->orderBy('created_at','desc')->paginate(20);
         return view('admin.register-course.list',[
-            'registerCourses' => $registerCourses
+            'registerCourses' => $registerCourses,
+            'infoSearch' => ''
         ]);
     }
 
@@ -38,7 +39,13 @@ class RegisterCourseController extends Controller
 
     public function search(Request $request){
         $infoSearch = $request->search;
-        $registerCourses = RegisterCourse::where('name','LIKE','%'.$infoSearch.'%')->OrderBy('created_at','desc')->paginate(20);
+        $registerCourses = RegisterCourse::with('course')
+        ->where('name','LIKE','%'.$infoSearch.'%')
+        ->orWhereHas('course', function ($query) use ($infoSearch) {
+            $query->where('name', 'LIKE', '%' . $infoSearch . '%');
+        })
+        ->orderBy('created_at','desc')
+        ->paginate(20);
         return view('admin.register-course.list',[
             'infoSearch' => $infoSearch,
             'registerCourses' => $registerCourses

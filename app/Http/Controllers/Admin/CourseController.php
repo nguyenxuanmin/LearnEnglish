@@ -18,7 +18,8 @@ class CourseController extends Controller
     public function index(){
         $courses = Course::OrderBy('name','asc')->paginate(20);
         return view('admin.course.list',[
-            'courses' => $courses
+            'courses' => $courses,
+            'infoSearch' => ''
         ]);
     }
 

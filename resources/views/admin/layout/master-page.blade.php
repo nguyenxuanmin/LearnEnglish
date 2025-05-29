@@ -81,7 +81,7 @@
                             success: function(response) {
                                 if (response.success == true) {
                                     Swal.fire({
-                                        text: "Cập nhật thành công!",
+                                        text: "Thành công!",
                                         icon: "success",
                                         showConfirmButton: false,
                                         timer: 1500

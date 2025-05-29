@@ -1,13 +1,5 @@
 @php
     $currentUrl = $_SERVER['REQUEST_URI'];
-    $list1 = ["course","unit"];
-    $isFound1 = false;
-    foreach ($list1 as $item) {
-        if (strpos($currentUrl, $item) !== false) {
-            $isFound1 = true;
-            break;
-        }
-    }
 @endphp
 <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
     <div class="sidebar-brand">
@@ -22,23 +14,15 @@
     <div class="sidebar-wrapper">
         <nav class="mt-2">
             <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu" data-accordion="false">
-                <li class="nav-item @if ($isFound1 == true) menu-open @endif">
-                    <a href="#" class="nav-link @if ($isFound1 == true) active @endif">
-                        <i class="nav-icon fa-solid fa-book-open"></i>
-                        <p>Quản lý khóa học <i class="nav-arrow fa-solid fa-chevron-right"></i></p>
+                <li class="nav-item">
+                    <a href="{{route('list_course')}}" class="nav-link @if (strpos($currentUrl, 'course') !== false) active @endif">
+                        <i class="nav-icon fa-solid fa-book-open"></i> <p>Danh sách khóa học</p>
                     </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{{route('list_course')}}" class="nav-link @if (strpos($currentUrl, 'course') !== false) active @endif">
-                                <i class="nav-icon fa-solid fa-list-ul"></i> <p>Danh sách khóa học</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{route('list_unit')}}" class="nav-link @if (strpos($currentUrl, 'unit') !== false) active @endif">
-                                <i class="nav-icon fa-solid fa-list-ul"></i> <p>Danh sách unit</p>
-                            </a>
-                        </li>
-                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="{{route('list_unit')}}" class="nav-link @if (strpos($currentUrl, 'unit') !== false) active @endif">
+                        <i class="fa-solid fa-graduation-cap"></i> <p>Danh sách unit</p>
+                    </a>
                 </li>
                 <li class="nav-item">
                     <a href="{{route('list_user')}}" class="nav-link @if (strpos($currentUrl, 'user') !== false) active @endif">
@@ -50,7 +34,12 @@
                         <i class="fa-solid fa-graduation-cap"></i> <p>Tiến độ học tập</p>
                     </a>
                 </li>
-                 <li class="nav-item">
+                <li class="nav-item">
+                    <a href="{{route('list_exercise')}}" class="nav-link @if (strpos($currentUrl, 'exercise') !== false) active @endif">
+                        <i class="fa-solid fa-file-lines"></i> <p>Nộp bài tập</p>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="{{route('about')}}" class="nav-link @if (strpos($currentUrl, 'about') !== false) active @endif">
                         <i class="fa-solid fa-circle-info"></i> <p>Giới thiệu</p>
                     </a>

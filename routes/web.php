@@ -22,6 +22,7 @@ use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\RegisterCourseController;
+use App\Http\Controllers\Admin\ExerciseController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\ClientAuthController;
 use App\Http\Controllers\Client\ClientContactController;
@@ -112,6 +113,10 @@ Route::group(['middleware' => [SystemAuth::class]], function () {
         Route::post('/register-course/delete', [RegisterCourseController::class, 'delete'])->name('delete_register_course');
         Route::get('/register-course/view/{id}', [RegisterCourseController::class, 'view'])->name('view_register_course');
         Route::get('/register-course/search', [RegisterCourseController::class, 'search'])->name('search_register_course');
+        // Nộp bài tập
+        Route::get('/exercise', [ExerciseController::class, 'index'])->name('list_exercise');
+        Route::get('/exercise/view/{id}', [ExerciseController::class, 'view'])->name('view_exercise');
+        Route::get('/exercise/get-exercises', [ExerciseController::class, 'getExercises'])->name('get_exercises');
     });
     Route::group(['middleware' => [LoginAuth::class]], function () {
         Route::get('/admin/login', function () {return view('admin.login');})->name('login');
@@ -135,12 +140,11 @@ Route::group(['middleware' => [SystemAuth::class]], function () {
         Route::get('/thay-doi-mat-khau', [ClientUserController::class, 'showPassword'])->name('change_password');
         Route::post('/thay-doi-mat-khau', [ClientUserController::class, 'change_password'])->name('change_password');
         Route::get('/khoa-hoc-dang-hoc', [ClientStudyController::class, 'show'])->name('study');
-        Route::post('/get-unit', [ClientStudyController::class, 'getUnits'])->name('get_unit');
-        Route::post('/get-lesson', [ClientStudyController::class, 'getLessons'])->name('get_lesson');
+        Route::get('/get-units', [ClientStudyController::class, 'getUnits'])->name('get_units');
+        Route::get('/get-lesson', [ClientStudyController::class, 'getLesson'])->name('get_lesson');
         Route::post('/lesson', [ClientStudyController::class, 'lesson'])->name('lesson');
         Route::get('/lich-su-nop-bai-tap', [ClientExerciseController::class, 'show'])->name('history_exercise');
         Route::post('/lich-su-nop-bai-tap', [ClientExerciseController::class, 'update'])->name('update_exercise');
-        Route::post('/xoa-lich-su-nop-bai-tap', [ClientExerciseController::class, 'delete'])->name('delete_exercise');
     });
 
     Route::group(['middleware' => [LoginClientAuth::class]], function () {

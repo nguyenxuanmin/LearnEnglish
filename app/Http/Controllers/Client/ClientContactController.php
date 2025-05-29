@@ -4,9 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Mail\ContactMail;
 use App\Models\Contact;
-use Illuminate\Support\Facades\Mail;
 
 class ClientContactController extends Controller
 {
@@ -46,12 +44,6 @@ class ClientContactController extends Controller
                 'message' => 'Vui lòng nhập nội dung.'
             ]);
         }
-
-        $details = [
-            'name' => $name
-        ];
-
-        Mail::to($email)->send(new ContactMail($details));
 
         $contact = new Contact();
         $contact->name = $name;

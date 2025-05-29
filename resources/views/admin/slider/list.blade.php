@@ -27,7 +27,7 @@
                 <div class="col-12 col-md-4 mb-3">
                     <form action="{{route('search_slider')}}">
                         <div class="input-group">
-                            <input type="search" name="search" class="form-control form-control" placeholder="Tìm kiếm" value="@if (isset($infoSearch)){{$infoSearch}}@endif">
+                            <input type="search" name="search" class="form-control form-control" placeholder="Tìm kiếm" value="{{$infoSearch}}">
                             <div class="input-group-append">
                                 <button type="submit" class="btn btn-outline-dark">
                                     <i class="fa fa-search"></i>
@@ -66,7 +66,7 @@
                     @endforeach
                 </tbody>
             </table>
-            {{$sliders->links('admin.layout.pagination')}}
+            {{$sliders->appends(['search' => $infoSearch])->links('admin.layout.pagination')}}
         </div>
     </div>
 @endsection

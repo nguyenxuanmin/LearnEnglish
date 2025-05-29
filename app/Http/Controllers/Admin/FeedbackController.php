@@ -12,7 +12,8 @@ class FeedbackController extends Controller
     public function index(){
         $feedbacks = Feedback::OrderBy('created_at','desc')->paginate(20);
         return view('admin.feedback.list',[
-            'feedbacks' => $feedbacks
+            'feedbacks' => $feedbacks,
+            'infoSearch' => ''
         ]);
     }
 
@@ -77,9 +78,9 @@ class FeedbackController extends Controller
     }
 
     public function search(Request $request){
-        $infoSearchs = $request->search;
-        $feedback = Feedback::where('name','LIKE','%'.$infoSearch.'%')->orderBy('created_at','desc')->paginate(20);
-        return view('admin.slider.list',[
+        $infoSearch = $request->search;
+        $feedbacks = Feedback::where('content','LIKE','%'.$infoSearch.'%')->orderBy('created_at','desc')->paginate(20);
+        return view('admin.feedback.list',[
             'infoSearch' => $infoSearch,
             'feedbacks' => $feedbacks
         ]);

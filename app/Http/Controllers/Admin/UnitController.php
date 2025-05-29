@@ -19,16 +19,17 @@ class UnitController extends Controller
     }
 
     public function index(){
-        $units = Unit::With(['course', 'lessons'])->OrderBy('name','asc')->paginate(20);
+        $units = Unit::with(['course', 'lessons'])->orderBy('name','asc')->paginate(20);
         return view('admin.unit.list',[
-            'units' => $units
+            'units' => $units,
+            'infoSearch' => ''
         ]);
     }
 
     public function add(){
         $titlePage = "Thêm unit";
         $action = "add";
-        $courses = Course::where('status',1)->OrderBy('name','asc')->get();
+        $courses = Course::where('status',1)->orderBy('name','asc')->get();
         $sumLesson = 1;
         return view('admin.unit.main',[
             'titlePage' => $titlePage,
@@ -42,8 +43,8 @@ class UnitController extends Controller
         $titlePage = "Sửa unit";
         $action = "edit";
         $unit = Unit::find($id);
-        $courses = Course::where('status',1)->OrderBy('name','asc')->get();
-        $lessons = Lesson::With('documents')->Where('unit_id',$id)->OrderBy('created_at','asc')->get();
+        $courses = Course::where('status',1)->orderBy('name','asc')->get();
+        $lessons = Lesson::with('documents')->where('unit_id',$id)->orderBy('created_at','asc')->get();
         $sumLesson = count($lessons) + 1;
         return view('admin.unit.main',[
             'titlePage' => $titlePage,
@@ -239,7 +240,17 @@ class UnitController extends Controller
 
     public function search(Request $request){
         $infoSearch = $request->search;
-        $units = Unit::where('name','LIKE','%'.$infoSearch.'%')->orderBy('name','asc')->paginate(20);
+        $units = Unit::with(['course', 'lessons'])
+        ->where('name', 'LIKE', '%' . $infoSearch . '%')
+        ->orWhereHas('course', function ($query) use ($infoSearch) {
+            $query->where('name', 'LIKE', '%' . $infoSearch . '%');
+        })
+        ->orWhereHas('lessons', function ($query) use ($infoSearch) {
+            $query->where('name', 'LIKE', '%' . $infoSearch . '%');
+        })
+        ->orderBy('name', 'asc')
+        ->paginate(20);
+        
         return view('admin.unit.list',[
             'infoSearch' => $infoSearch,
             'units' => $units

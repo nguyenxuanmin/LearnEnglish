@@ -118,92 +118,74 @@
         ];
 
         if ($('.item-unit-name').length > 0) {
-            document.querySelectorAll('.item-unit-name').forEach(unit => {
-                unit.addEventListener('click', function () {
-                    $('.item-unit-name').removeClass('active');
-                    $(this).addClass('active');
-                    const unitId = this.dataset.id;
-                    var csrfToken = $('meta[name="csrf-token"]').attr('content');
-                    $.ajax({
-                        url: '{{route('get_unit')}}',
-                        headers: {
-                            'X-CSRF-TOKEN': csrfToken
-                        },
-                        type: 'POST',
-                        data: {id: unitId},
-                        success: function(response) {
-                            let unitContent = `<div class="unit-content-title">${response.unitName}</div>`;
-                                unitContent += `<div class="unit-content">`;
-                                    response.lessons.forEach(function(lesson) {
-                                        unitContent += `
-                                            <div class="item-lesson" data-id="${lesson.id}">
-                                                ${lesson.name}
-                                            </div>
-                                        `;
-                                    });
-                                unitContent += `</div>`;
-                            $('#unitContent').html(unitContent);
-                            $('#lessonContent').html("");
-                        },
-                        error: function(xhr) {
-                            console.log(xhr);
-                        }
-                    });
+            $(document).on('click', '.item-unit-name', function () {
+                $('.item-unit-name').removeClass('active');
+                $(this).addClass('active');
+                const unitId = $(this).data('id');
+                $.ajax({
+                    url: '{{ route('get_units') }}',
+                    type: 'GET',
+                    data: {id: unitId},
+                    success: function(response) {
+                        let unitContent = `<div class="unit-content-title">${response.unitName}</div>`;
+                        unitContent += `<div class="unit-content">`;
+                        response.lessons.forEach(function(lesson) {
+                            unitContent += `
+                                <div class="item-lesson" data-id="${lesson.id}">
+                                    ${lesson.name}
+                                </div>
+                            `;
+                        });
+                        unitContent += `</div>`;
+                        $('#unitContent').html(unitContent);
+                        $('#lessonContent').html("");
+                    },
+                    error: function(xhr) {
+                        console.log(xhr);
+                    }
                 });
             });
         }
 
         if ($('#unitContent').length > 0) {
-            document.getElementById('unitContent').addEventListener('click', function(e) {
-                if (e.target.classList.contains('item-lesson')) {
-                    $('.item-lesson').removeClass('active');
-                    $(e.target).addClass('active');
-                    const lessonId = e.target.dataset.id;
-                    var csrfToken = $('meta[name="csrf-token"]').attr('content');
-                    $.ajax({
-                        url: '{{route('get_lesson')}}',
-                        headers: {
-                            'X-CSRF-TOKEN': csrfToken
-                        },
-                        type: 'POST',
-                        data: { id: lessonId },
-                        success: function(response) {
-                            const baseDocumentUrl = "{{asset('storage/documents')}}/";
-                            let lessonContent = `<h4>${response.lesson.name}</h4>`;
-                            if(response.documents.length > 0){
-                                lessonContent += `
-                                    <a class="btn btn-lesson" data-bs-toggle="modal" data-bs-target="#modalLesson">Nộp bài tập</a>
-                                    <p>Hạn cuối nộp bài tập: ${response.deadline}</p>
-                                `;
-                            }
-                            lessonContent += `<div class="lesson-content">`;
-                                if (response.lesson.content && response.lesson.content.trim() !== '') {
-                                    lessonContent += `
-                                        <div>
-                                            ${response.lesson.content}
-                                        </div>
-                                    `;
-                                }
-                                lessonContent += `<div class="title-detail"><i class="fa-solid fa-file"></i> Tài liệu và bài tập:</div>`;
-                                response.documents.forEach(function(document) {
-                                    lessonContent += `
-                                        <div class="item-document">
-                                            <span>${document.name}</span>
-                                            <a href="${baseDocumentUrl}${document.name}" download title="Tải về"><i class="fa-solid fa-download"></i></a>
-                                        </div>
-                                    `;
-                                });
-                            lessonContent += `</div>`;
+            $('#unitContent').on('click', '.item-lesson', function() {
+                $('.item-lesson').removeClass('active');
+                $(this).addClass('active');
+                const lessonId = $(this).data('id');
+                $.ajax({
+                    url: '{{ route('get_lesson') }}',
+                    type: 'GET',
+                    data: { id: lessonId },
+                    success: function(response) {
+                        const baseDocumentUrl = "{{ asset('storage/documents') }}/";
+                        let lessonContent = `<h4>${response.lesson.name}</h4>`;
+                        if (response.documents.length > 0) {
                             lessonContent += `
-                                <input type="hidden" id="lessonId" name="lessonId" value="${response.lesson.id}">
+                                <a class="btn btn-lesson" data-bs-toggle="modal" data-bs-target="#modalLesson">Nộp bài tập</a>
+                                <p>Hạn cuối nộp bài tập: ${response.deadline}</p>
                             `;
-                            $('#lessonContent').html(lessonContent);
-                        },
-                        error: function(xhr) {
-                            console.log(xhr);
                         }
-                    });
-                }
+                        lessonContent += `<div class="lesson-content">`;
+                        if (response.lesson.content && response.lesson.content.trim() !== '') {
+                            lessonContent += `<div>${response.lesson.content}</div>`;
+                        }
+                        lessonContent += `<div class="title-detail"><i class="fa-solid fa-file"></i> Tài liệu và bài tập:</div>`;
+                        response.documents.forEach(function(document) {
+                            lessonContent += `
+                                <div class="item-document">
+                                    <span>${document.name}</span>
+                                    <a href="${baseDocumentUrl}${document.name}" download title="Tải về"><i class="fa-solid fa-download"></i></a>
+                                </div>
+                            `;
+                        });
+                        lessonContent += `</div>`;
+                        lessonContent += `<input type="hidden" id="lessonId" name="lessonId" value="${response.lesson.id}">`;
+                        $('#lessonContent').html(lessonContent);
+                    },
+                    error: function(xhr) {
+                        console.log(xhr);
+                    }
+                });
             });
         }
 

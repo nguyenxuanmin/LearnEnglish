@@ -15,49 +15,52 @@ use App\Models\ExerciseDocument;
 class ClientStudyController extends Controller
 {
     public function show(){
-        $study = Progress::where('user_id',Auth::id())->first();
-        if (isset($study) && !is_null($study->course_id)) {
-            $course = $study->course;
-            $units = $course->units()->with(['lessons.documents'])->where('status',1)->orderBy('created_at', 'asc')->get();
-            if(count($units)){
-                $unitActive = $units[0];
-                $lessons = $unitActive->lessons()->with('documents')->where('status',1)->orderBy('id', 'desc')->get();
-                $lessonActive = $lessons[0];
-                return view('client.study',[
-                    'study' => $study,
-                    'course' => $course,
-                    'units' => $units,
-                    'lessons' => $lessons,
-                    'unitActive' => $unitActive,
-                    'lessonActive' => $lessonActive
-                ]);
-            }else{
-                return view('client.study',[
-                    'study' => $study,
-                    'units' => $units
-                ]);
-            }
-        } else {
-            return view('client.study',[
+        $study = Progress::where('user_id', Auth::id())->first();
+        if (!$study || is_null($study->course_id)) {
+            return view('client.study', [
                 'study' => $study
             ]);
         }
-    }
+        $course = $study->course;
+        $units = $course->units()->with(['lessons.documents'])->where('status', 1)->orderBy('created_at', 'asc')->get();
+        if ($units->isEmpty()) {
+            return view('client.study', [
+                'study' => $study,
+                'course' => $course,
+                'units' => $units
+            ]);
+        }
+        $unitActive = $units->first();
+        $lessons = $unitActive->lessons()->with('documents')->where('status', 1)->orderBy('id', 'desc')->get();
+        $lessonActive = $lessons->first();
 
+        return view('client.study', [
+            'study' => $study,
+            'course' => $course,
+            'units' => $units,
+            'lessons' => $lessons,
+            'unitActive' => $unitActive,
+            'lessonActive' => $lessonActive
+        ]);
+    }
+    
     public function getUnits(Request $request){
-        $unit = Unit::where('id',$request->id)->first();
-        $lessons = $unit->lessons()->orderBy('created_at', 'desc')->get();
+        $unit = Unit::with(['lessons' => function($q) {
+            $q->where('status', 1);
+            $q->orderBy('created_at', 'desc');
+        }])->find($request->id);
+
         return response()->json([
             'unitName' => $unit->name,
-            'lessons' => $lessons
+            'lessons' => $unit->lessons
         ]);
     }
 
-    public function getLessons(Request $request){
-        $lesson = Lesson::where('id',$request->id)->first();
+    public function getLesson(Request $request){
+        $lesson = Lesson::with('isNotKeyDocuments')->find($request->id);
         return response()->json([
             'lesson' => $lesson,
-            'deadline' => $lesson->time->format('d-m-Y'),
+            'deadline' => $lesson->time ? $lesson->time->format('d-m-Y') : null,
             'documents' => $lesson->isNotKeyDocuments
         ]);
     }
@@ -75,8 +78,8 @@ class ClientStudyController extends Controller
         }
 
         $lesson = Lesson::find($id);
-        $deadline = $lesson->time->copy()->addDays(2);
-        if ($deadline->lt(now())) {
+        $deadline = $lesson->time->copy()->addDays(1);
+        if ($deadline->lt(now()->startOfDay())) {
             return response()->json([
                 'success' => false,
                 'message' => 'Đã quá thời gian nộp bài tập, không thể nộp bài tập.'
