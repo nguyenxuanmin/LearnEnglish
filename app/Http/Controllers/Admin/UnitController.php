@@ -19,7 +19,7 @@ class UnitController extends Controller
     }
 
     public function index(){
-        $units = Unit::with(['course', 'lessons'])->orderBy('name','asc')->paginate(20);
+        $units = Unit::with(['course', 'lessons'])->orderBy('created_at','desc')->paginate(20);
         return view('admin.unit.list',[
             'units' => $units,
             'infoSearch' => ''
@@ -124,7 +124,7 @@ class UnitController extends Controller
             foreach ($lessons as $key => $lesson) {
                 foreach ($lesson->documents as $documentRemove) {
                     $fileName = $documentRemove->name;
-                    if((!empty($fileLessonOlds) && !in_array($fileName,$fileLessonOlds[$key+1])) || empty($fileLessonOlds)){
+                    if((!empty($fileLessonOlds) && isset($fileLessonOlds[$key+1]) && !in_array($fileName,$fileLessonOlds[$key+1])) || empty($fileLessonOlds) || !isset($fileLessonOlds[$key+1])){
                         $filePath = 'documents/' . $fileName;
                         if (Storage::disk('public')->exists($filePath)) {
                             Storage::disk('public')->delete($filePath);
@@ -162,12 +162,13 @@ class UnitController extends Controller
             $lesson->time = $time[$i];
             $lesson->save();
             
+            $countLessonOld = 0;
             if (isset($fileLessonOlds[$i + 1])) {
-                foreach ($fileLessonOlds[$i + 1] as $k => $fileLessonOld) {
+                foreach ($fileLessonOlds[$i + 1] as $fileLessonOld) {
                     $fileLesson = new Document();
                     $fileLesson->name = $fileLessonOld;
                     $fileLesson->lesson_id = $lesson->id;
-                    $isKey = $request->input('key_'.($i + 1).'_'.$k);
+                    $isKey = $request->input('key_'.($i + 1).'_'.$countLessonOld);
                     if (isset($isKey)) {
                         $key = 1;
                     } else {
@@ -175,11 +176,12 @@ class UnitController extends Controller
                     }
                     $fileLesson->isKey = $key;
                     $fileLesson->save();
+                    $countLessonOld += 1;
                 }
             }
 
             if ($request->hasFile('fileLesson'.$i+1)) {
-                foreach ($request->file('fileLesson'.$i+1) as $k => $file) {
+                foreach ($request->file('fileLesson'.$i+1) as $file) {
                     if ($file->isValid()) {
                         $nameFile = $file->getClientOriginalName();
                         $typeFile = $file->getClientOriginalExtension();
@@ -189,7 +191,7 @@ class UnitController extends Controller
                         $fileLesson = new Document();
                         $fileLesson->name = $newNameFile;
                         $fileLesson->lesson_id = $lesson->id;
-                        $isKey = $request->input('key_'.($i + 1).'_'.$k);
+                        $isKey = $request->input('key_'.($i + 1).'_'.$countLessonOld);
                         if (isset($isKey)) {
                             $key = 1;
                         } else {
@@ -197,6 +199,7 @@ class UnitController extends Controller
                         }
                         $fileLesson->isKey = $key;
                         $fileLesson->save();
+                        $countLessonOld += 1;
                     }
                 }
             }
@@ -248,7 +251,7 @@ class UnitController extends Controller
         ->orWhereHas('lessons', function ($query) use ($infoSearch) {
             $query->where('name', 'LIKE', '%' . $infoSearch . '%');
         })
-        ->orderBy('name', 'asc')
+        ->orderBy('created_at','desc')
         ->paginate(20);
         
         return view('admin.unit.list',[

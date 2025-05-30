@@ -36,7 +36,7 @@
                     <tr>
                         <th scope="col" width="100px" class="text-center">STT</th>
                         <th scope="col">Tên học viên</th>
-                        <th scope="col" width="400px">Bài học</th>
+                        <th scope="col" width="500px">Bài học</th>
                         <th scope="col" width="250px" class="text-center">Tình trạng</th>
                         <th scope="col" width="150px" class="text-center">Hành động</th>
                     </tr>
@@ -62,5 +62,62 @@
                 });
             });
         });
+
+        function noticeExercite(email,user,lesson_id,user_id){
+            Swal.fire({
+                text: 'Bạn có muốn nhắc '+user+' nộp bài tập?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Có',
+                cancelButtonText: 'Huỷ bỏ'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var csrfToken = $('meta[name="csrf-token"]').attr('content');
+                    Swal.fire({
+                        title: "Đang thực hiện!",
+                        timer: 5000,
+                        timerProgressBar: true,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                    $.ajax({
+                        url: '{{route('notice_exercise')}}',
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken
+                        },
+                        type: 'POST',
+                        data: {
+                            email: email,
+                            lesson_id: lesson_id,
+                            user_name: user,
+                            user_id: user_id,
+                        },
+                        success: function(response) {
+                            if(response.success){
+                                Swal.fire({
+                                    text: "Nhắc nộp bài thành công!",
+                                    icon: "success",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                }).then((result) => {
+                                    location.reload();
+                                });
+                            }else{
+                                Swal.fire({
+                                    text: response.message,
+                                    icon: "error",
+                                    showConfirmButton: false,
+                                    timer: 2000
+                                });
+                            }
+                        },
+                        error: function(xhr) {
+                            console.log(xhr);
+                        }
+                    });
+                }
+            });
+        }
     </script>
 @endsection

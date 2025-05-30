@@ -117,6 +117,7 @@ Route::group(['middleware' => [SystemAuth::class]], function () {
         Route::get('/exercise', [ExerciseController::class, 'index'])->name('list_exercise');
         Route::get('/exercise/view/{id}', [ExerciseController::class, 'view'])->name('view_exercise');
         Route::get('/exercise/get-exercises', [ExerciseController::class, 'getExercises'])->name('get_exercises');
+        Route::post('/exercise/notice-exercise', [ExerciseController::class, 'noticeExercise'])->name('notice_exercise');
     });
     Route::group(['middleware' => [LoginAuth::class]], function () {
         Route::get('/admin/login', function () {return view('admin.login');})->name('login');
@@ -145,6 +146,7 @@ Route::group(['middleware' => [SystemAuth::class]], function () {
         Route::post('/lesson', [ClientStudyController::class, 'lesson'])->name('lesson');
         Route::get('/lich-su-nop-bai-tap', [ClientExerciseController::class, 'show'])->name('history_exercise');
         Route::post('/lich-su-nop-bai-tap', [ClientExerciseController::class, 'update'])->name('update_exercise');
+        Route::get('/get-form-exercise/{id}', [ClientExerciseController::class, 'getFormExercise'])->name('get_form_exercise');
     });
 
     Route::group(['middleware' => [LoginClientAuth::class]], function () {

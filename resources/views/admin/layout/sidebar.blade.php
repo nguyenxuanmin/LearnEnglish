@@ -31,12 +31,12 @@
                 </li>
                 <li class="nav-item">
                     <a href="{{route('list_progress')}}" class="nav-link @if (strpos($currentUrl, 'progress') !== false) active @endif">
-                        <i class="fa-solid fa-graduation-cap"></i> <p>Tiến độ học tập</p>
+                        <i class="fa-solid fa-spinner"></i> <p>Tiến độ học tập</p>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="{{route('list_exercise')}}" class="nav-link @if (strpos($currentUrl, 'exercise') !== false) active @endif">
-                        <i class="fa-solid fa-file-lines"></i> <p>Nộp bài tập</p>
+                        <i class="fa-solid fa-cloud-arrow-up"></i> <p>Nộp bài tập</p>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -76,7 +76,7 @@
                 </li>
                 <li class="nav-item">
                     <a href="{{route('company')}}" class="nav-link @if (strpos($currentUrl, 'company') !== false) active @endif">
-                        <i class="fa-solid fa-house"></i> <p>Thông tin công ty</p>
+                        <i class="fa-solid fa-building"></i> <p>Thông tin công ty</p>
                     </a>
                 </li>
             </ul>

@@ -44,7 +44,7 @@
                                 <div id="lessonContent">
                                     @if (!empty($lessonActive))
                                         <h4>{{$lessonActive->name}}</h4>
-                                        @if (count($lessonActive->isNotKeyDocuments))
+                                        @if ($isUpdate)
                                             <a class="btn btn-lesson" data-bs-toggle="modal" data-bs-target="#modalLesson">Nộp bài tập</a>
                                             <p>Hạn cuối nộp bài tập: {{$lessonActive->time->format('d-m-Y')}}</p>
                                         @endif
@@ -60,7 +60,7 @@
                                             @foreach ($lessonActive->isNotKeyDocuments as $item)
                                                 <div class="item-document">
                                                     <span>{{$item->name}}</span>
-                                                    <a href="{{asset('storage/documents/'.$item->name)}}" download title="Tải về"><i class="fa-solid fa-download"></i></a>
+                                                    <b><a href="{{asset('storage/documents/'.$item->name)}}" download title="Tải về">Tải về</a></b>
                                                 </div>
                                             @endforeach
                                         </div>
@@ -159,25 +159,25 @@
                     success: function(response) {
                         const baseDocumentUrl = "{{ asset('storage/documents') }}/";
                         let lessonContent = `<h4>${response.lesson.name}</h4>`;
-                        if (response.documents.length > 0) {
+                        if (response.isUpdate) {
                             lessonContent += `
                                 <a class="btn btn-lesson" data-bs-toggle="modal" data-bs-target="#modalLesson">Nộp bài tập</a>
                                 <p>Hạn cuối nộp bài tập: ${response.deadline}</p>
                             `;
                         }
                         lessonContent += `<div class="lesson-content">`;
-                        if (response.lesson.content && response.lesson.content.trim() !== '') {
-                            lessonContent += `<div>${response.lesson.content}</div>`;
-                        }
-                        lessonContent += `<div class="title-detail"><i class="fa-solid fa-file"></i> Tài liệu và bài tập:</div>`;
-                        response.documents.forEach(function(document) {
-                            lessonContent += `
-                                <div class="item-document">
-                                    <span>${document.name}</span>
-                                    <a href="${baseDocumentUrl}${document.name}" download title="Tải về"><i class="fa-solid fa-download"></i></a>
-                                </div>
-                            `;
-                        });
+                            if (response.lesson.content && response.lesson.content.trim() !== '') {
+                                lessonContent += `<div>${response.lesson.content}</div>`;
+                            }
+                            lessonContent += `<div class="title-detail"><i class="fa-solid fa-file"></i> Tài liệu và bài tập:</div>`;
+                            response.documents.forEach(function(document) {
+                                lessonContent += `
+                                    <div class="item-document">
+                                        <span>${document.name}</span>
+                                        <b><a href="${baseDocumentUrl}${document.name}" download title="Tải về">Tải về</a></b>
+                                    </div>
+                                `;
+                            });
                         lessonContent += `</div>`;
                         lessonContent += `<input type="hidden" id="lessonId" name="lessonId" value="${response.lesson.id}">`;
                         $('#lessonContent').html(lessonContent);

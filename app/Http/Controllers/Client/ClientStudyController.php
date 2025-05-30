@@ -22,7 +22,7 @@ class ClientStudyController extends Controller
             ]);
         }
         $course = $study->course;
-        $units = $course->units()->with(['lessons.documents'])->where('status', 1)->orderBy('created_at', 'asc')->get();
+        $units = $course->units()->with('lessons.isNotKeyDocuments')->where('status', 1)->orderBy('created_at', 'desc')->get();
         if ($units->isEmpty()) {
             return view('client.study', [
                 'study' => $study,
@@ -31,8 +31,19 @@ class ClientStudyController extends Controller
             ]);
         }
         $unitActive = $units->first();
-        $lessons = $unitActive->lessons()->with('documents')->where('status', 1)->orderBy('id', 'desc')->get();
+        $lessons = $unitActive->lessons()->with('isNotKeyDocuments')->where('status', 1)->orderBy('id', 'desc')->get();
         $lessonActive = $lessons->first();
+        $isUpdate = false;
+        $isDeadline = 0;
+        $isLatest = Lesson::latest()->first()->id === $lessonActive->id;
+        $deadline = $lessonActive->time->copy()->addDays(1);
+        if ($deadline->lt(now()->startOfDay())) {
+            $isDeadline = 1;
+        }
+        $exerciseEmpty = Exercise::where('lesson_id',$lessonActive->id)->first();
+        if ($isLatest && $isDeadline === 0 && !isset($exerciseEmpty) && count($lessonActive->isNotKeyDocuments)){
+            $isUpdate = true;
+        }
 
         return view('client.study', [
             'study' => $study,
@@ -40,7 +51,8 @@ class ClientStudyController extends Controller
             'units' => $units,
             'lessons' => $lessons,
             'unitActive' => $unitActive,
-            'lessonActive' => $lessonActive
+            'lessonActive' => $lessonActive,
+            'isUpdate' => $isUpdate
         ]);
     }
     
@@ -58,10 +70,22 @@ class ClientStudyController extends Controller
 
     public function getLesson(Request $request){
         $lesson = Lesson::with('isNotKeyDocuments')->find($request->id);
+        $isUpdate = false;
+        $isDeadline = 0;
+        $isLatest = Lesson::latest()->first()->id === $lesson->id;
+        $deadline = $lesson->time->copy()->addDays(1);
+        if ($deadline->lt(now()->startOfDay())) {
+            $isDeadline = 1;
+        }
+        $exerciseEmpty = Exercise::where('lesson_id',$lesson->id)->first();
+        if ($isLatest && $isDeadline === 0 && !isset($exerciseEmpty) && count($lesson->isNotKeyDocuments)){
+            $isUpdate = true;
+        }
         return response()->json([
             'lesson' => $lesson,
             'deadline' => $lesson->time ? $lesson->time->format('d-m-Y') : null,
-            'documents' => $lesson->isNotKeyDocuments
+            'documents' => $lesson->isNotKeyDocuments,
+            'isUpdate' => $isUpdate
         ]);
     }
     
@@ -69,51 +93,34 @@ class ClientStudyController extends Controller
         $id = $request->lessonId;
         $content = $request->contentLesson;
 
-        $exerciseExist = Exercise::where('lesson_id',$id)->where('user_id',Auth::id())->first();
-        if (isset($exerciseExist)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Bạn đã nộp bài tập này rồi, không thể nộp bài tập.'
-            ]);
-        }
-
-        $lesson = Lesson::find($id);
-        $deadline = $lesson->time->copy()->addDays(1);
-        if ($deadline->lt(now()->startOfDay())) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Đã quá thời gian nộp bài tập, không thể nộp bài tập.'
-            ]);
-        }
-
         if (!$request->hasFile('fileLesson')) {
             return response()->json([
                 'success' => false,
                 'message' => 'Vui lòng chọn tối thiếu 1 file bài tập.'
             ]);
-        }else{
-            $exercise = new Exercise();
-            $exercise->content = $content;
-            $exercise->lesson_id = $id;
-            $exercise->user_id = Auth::id();
-            $exercise->save();
-            foreach ($request->file('fileLesson') as $file) {
-                if ($file->isValid()) {
-                    $nameFile = $file->getClientOriginalName();
-                    $typeFile = $file->getClientOriginalExtension();
-                    $nameOnly = pathinfo($nameFile, PATHINFO_FILENAME);
-                    $newNameFile = 'exercise_' . time() . '_' . $nameOnly . '.' . $typeFile;
-                    $path = $file->storeAs('exercise_documents', $newNameFile, 'public');
-                    $exerciseDocument = new ExerciseDocument();
-                    $exerciseDocument->name = $newNameFile;
-                    $exerciseDocument->exercise_id = $exercise->id;
-                    $exerciseDocument->save();
-                }
-            }
-            return response()->json([
-                'success' => true,
-                'message' => ''
-            ]);
         }
+
+        $exercise = new Exercise();
+        $exercise->content = $content;
+        $exercise->lesson_id = $id;
+        $exercise->user_id = Auth::id();
+        $exercise->save();
+        foreach ($request->file('fileLesson') as $file) {
+            if ($file->isValid()) {
+                $nameFile = $file->getClientOriginalName();
+                $typeFile = $file->getClientOriginalExtension();
+                $nameOnly = pathinfo($nameFile, PATHINFO_FILENAME);
+                $newNameFile = 'exercise_' . time() . '_' . $nameOnly . '.' . $typeFile;
+                $path = $file->storeAs('exercise_documents', $newNameFile, 'public');
+                $exerciseDocument = new ExerciseDocument();
+                $exerciseDocument->name = $newNameFile;
+                $exerciseDocument->exercise_id = $exercise->id;
+                $exerciseDocument->save();
+            }
+        }
+        return response()->json([
+            'success' => true,
+            'message' => ''
+        ]);
     }
 }

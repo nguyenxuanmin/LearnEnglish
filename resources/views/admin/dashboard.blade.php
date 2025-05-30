@@ -34,18 +34,19 @@
                 <div class="col-lg-3 col-6">
                     <div class="small-box text-bg-warning">
                         <div class="inner">
-                            <h3>111</h3>
-                            <p>Liên hệ</p>
+                            <h3>{{$countExercise}}</h3>
+                            <p>Học viên nộp bài tập vào ngày hôm nay</p>
                         </div>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="small-box-icon" viewBox="0 0 18 18">
-                            <path d="M2.678 11.894a1 1 0 0 1 .287.801 11 11 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8 8 0 0 0 8 14c3.996 0 7-2.807 7-6s-3.004-6-7-6-7 2.808-7 6c0 1.468.617 2.83 1.678 3.894m-.493 3.905a22 22 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a10 10 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9 9 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105"/>
+                            <path fill-rule="evenodd" d="M7.646 5.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 6.707V10.5a.5.5 0 0 1-1 0V6.707L6.354 7.854a.5.5 0 1 1-.708-.708z"/>
+                            <path d="M4.406 3.342A5.53 5.53 0 0 1 8 2c2.69 0 4.923 2 5.166 4.579C14.758 6.804 16 8.137 16 9.773 16 11.569 14.502 13 12.687 13H3.781C1.708 13 0 11.366 0 9.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383m.653.757c-.757.653-1.153 1.44-1.153 2.056v.448l-.445.049C2.064 6.805 1 7.952 1 9.318 1 10.785 2.23 12 3.781 12h8.906C13.98 12 15 10.988 15 9.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 4.825 10.328 3 8 3a4.53 4.53 0 0 0-2.941 1.1z"/>
                         </svg>
                     </div>
                 </div>
                 <div class="col-lg-3 col-6">
                     <div class="small-box text-bg-danger">
                         <div class="inner">
-                            <h3>11111111111</h3>
+                            <h3>{{number_format($revenue, 0, ',', '.')}}</h3>
                             <p>Doanh thu</p>
                         </div>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="small-box-icon" viewBox="0 0 18 18">
@@ -135,7 +136,85 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-12">
+                    <div class="card mb-4">
+                    <div class="card-header border-0">
+                        <h3 class="card-title">Bảng doanh thu cho năm {{now()->format('Y')}}</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="position-relative mb-4"><div id="revenue-chart"></div></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js" integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8=" crossorigin="anonymous"></script>
+    <script>
+        const revenue_chart_options = {
+            series: [
+                {
+                    name: 'Doanh thu',
+                    data: @json($dataMonthlyRevenue),
+                },
+            ],
+            chart: {
+                type: 'bar',
+                height: 300,
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: false,
+                    columnWidth: '20%',
+                    endingShape: 'rounded',
+                },
+            },
+            legend: {
+                show: true,
+            },
+            colors: ['#20c997'],
+            dataLabels: {
+                enabled: false,
+            },
+            stroke: {
+                show: true,
+                width: 2,
+                colors: ['transparent'],
+            },
+            xaxis: {
+                categories: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
+            },
+            fill: {
+                opacity: 1,
+            },
+            tooltip: {
+                y: {
+                    formatter: function (val) {
+                        return new Intl.NumberFormat('vi-VN', {
+                            style: 'currency',
+                            currency: 'VND',
+                            maximumFractionDigits: 0
+                        }).format(val);
+                    },
+                },
+            },
+            yaxis: {
+                labels: {
+                    formatter: function (val) {
+                        return new Intl.NumberFormat('vi-VN', {
+                            style: 'currency',
+                            currency: 'VND',
+                            maximumFractionDigits: 0
+                        }).format(val);
+                    }
+                }
+            },
+        };
+
+        const revenue_chart = new ApexCharts(
+            document.querySelector('#revenue-chart'),
+            revenue_chart_options,
+        );
+
+        revenue_chart.render();
+    </script>
 @endsection

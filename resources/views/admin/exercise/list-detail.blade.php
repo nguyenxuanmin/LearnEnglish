@@ -17,10 +17,10 @@
         </td>
         <td valign="middle" align="center">
             @if ($exercise['status'] == 1)
-                <a href="" class="btn btn-outline-info" title="Xem chi tiết"><i class="fa-solid fa-eye"></i></a>
+                <a href="{{route('view_exercise',$exercise['id'])}}" class="btn btn-outline-info" title="Xem chi tiết"><i class="fa-solid fa-eye"></i></a>
             @else
                 @if ($exercise['deadline'])
-                    <button class="btn btn-outline-warning" title="Nhắc nộp bài tập" onclick=""><i class="fa-solid fa-bell"></i></button>
+                    <button class="btn btn-outline-warning" title="Nhắc nộp bài tập" onclick="noticeExercite('{{$exercise['email']}}','{{$exercise['name']}}','{{$exercise['lesson_id']}}','{{$exercise['user_id']}}')"><i class="fa-solid fa-bell"></i></button>
                 @endif
             @endif
         </td>
