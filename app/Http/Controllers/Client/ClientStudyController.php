@@ -35,7 +35,7 @@ class ClientStudyController extends Controller
         $lessonActive = $lessons->first();
         $isUpdate = false;
         $isDeadline = 0;
-        $isLatest = Lesson::latest()->first()->id === $lessonActive->id;
+        $isLatest = Lesson::where('status', 1)->latest()->first()->id === $lessonActive->id;
         $deadline = $lessonActive->time->copy()->addDays(1);
         if ($deadline->lt(now()->startOfDay())) {
             $isDeadline = 1;
