@@ -1,6 +1,3 @@
-@php
-    $currentUrl = $_SERVER['REQUEST_URI'];
-@endphp
 <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
     <div class="sidebar-brand">
         <a href="{{route('admin')}}" class="brand-link">
